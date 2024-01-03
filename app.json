@@ -13,7 +13,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.trippin"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,6 +23,7 @@
       },
       "package": "com.anonymous.trippin"
     },
+
     "web": {
       "favicon": "./assets/favicon.png"
     },
