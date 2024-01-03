@@ -24,12 +24,12 @@ export default function App() {
         <MainContainer />
       </SafeAreaProvider>
     </SafeAreaView>
-    <View style={styles.page}>
-      <BackendTest />
-      {/* <View style={styles.container}>
-        <Mapbox.MapView style={styles.map} />
-      </View> */}
-    </View>
+    // <View style={styles.page}>
+    //   <BackendTest />
+    //   {/* <View style={styles.container}>
+    //     <Mapbox.MapView style={styles.map} />
+    //   </View> */}
+    // </View>
   );
 }
 
