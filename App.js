@@ -1,33 +1,19 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { db } from "./firebaseconfig";
-import { collection, getDocs } from "firebase/firestore";
-import { testFunc } from "./utils/backend";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import MainContainer from "./navigation/MainContainer";
+import { StyleSheet } from "react-native";
 
 export default function App() {
-  const [test, setTest] = useState("");
-
-  useEffect(() => {
-    testFunc().then((res) => {
-      setTest(res);
-    });
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>mic test</Text>
-      <Text>{test}</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.AndroidSafeArea}>
+      <SafeAreaProvider>
+        <MainContainer />
+      </SafeAreaProvider>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  AndroidSafeArea: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
