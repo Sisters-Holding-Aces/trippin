@@ -3,11 +3,22 @@ import { registerRootComponent } from "expo";
 import Mapbox from "@rnmapbox/maps";
 
 Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY);
+import { testFunc } from "./utils/backend";
+import BackendTest from "./utils/BackendTest";
 
 export default function App() {
+  const [test, setTest] = useState("");
+
+  useEffect(() => {
+    testFunc().then((res) => {
+      setTest(res);
+    });
+  }, []);
+
   return (
     <View style={styles.page}>
       <View style={styles.container}>
+        <BackendTest />
         <Mapbox.MapView style={styles.map} />
       </View>
     </View>
