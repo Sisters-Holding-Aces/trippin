@@ -10,8 +10,8 @@ export default function App() {
 
   useEffect(() => {
     testFunc().then((res) => {
-      setTest(res)
-    })
+      setTest(res);
+    });
   }, []);
 
   return (
