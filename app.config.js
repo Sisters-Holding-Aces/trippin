@@ -5,7 +5,8 @@ module.exports = ({ config }) => {
       [
         "@rnmapbox/maps",
         {
-          RNMapboxMapsDownloadToken: process.env.MAPBOX_SECRET_NATIVE_SDK_KEY,
+          RNMapboxMapsDownloadToken:
+            process.env.MAPBOX_SECRET_NATIVE_SDK_KEY || process.env.DEV_MAPBOX_SECRET_NATIVE_SDK_KEY,
         },
       ],
       [

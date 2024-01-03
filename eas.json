@@ -5,13 +5,33 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "DEV_FIREBASE_API_KEY": "AIzaSyAJZTM05LRzQOYCCQWZPs9QD3YaoAaRId4",
+        "DEV_FIREBASE_AUTH_DOMAIN": "trippin-ed778.firebaseapp.com",
+        "DEV_FIREBASE_PROJECT_ID": "trippin-ed778",
+        "DEV_FIREBASE_STORAGE_BUCKET": "trippin-ed778.appspot.com",
+        "DEV_FIREBASE_MESSAGING_SENDER_ID": "997067009957",
+        "DEV_FIREBASE_APP_ID": "1:997067009957:web:bc6c66599726ed40ca024c",
+        "DEV_MAPBOX_PUBLIC_API_KEY": "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g",
+        "DEV_MAPBOX_SECRET_NATIVE_SDK_KEY": "sk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscXhibGV6MDBhbmYycXB6NGFyb3poY2YifQ.yEX_avLONvUh4bT4Iam4zQ"
+      }
     },
     "development-simulator": {
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "DEV_FIREBASE_API_KEY": "AIzaSyAJZTM05LRzQOYCCQWZPs9QD3YaoAaRId4",
+        "DEV_FIREBASE_AUTH_DOMAIN": "trippin-ed778.firebaseapp.com",
+        "DEV_FIREBASE_PROJECT_ID": "trippin-ed778",
+        "DEV_FIREBASE_STORAGE_BUCKET": "trippin-ed778.appspot.com",
+        "DEV_FIREBASE_MESSAGING_SENDER_ID": "997067009957",
+        "DEV_FIREBASE_APP_ID": "1:997067009957:web:bc6c66599726ed40ca024c",
+        "DEV_MAPBOX_PUBLIC_API_KEY": "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g",
+        "DEV_MAPBOX_SECRET_NATIVE_SDK_KEY": "sk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscXhibGV6MDBhbmYycXB6NGFyb3poY2YifQ.yEX_avLONvUh4bT4Iam4zQ"
       }
     },
     "preview": {
