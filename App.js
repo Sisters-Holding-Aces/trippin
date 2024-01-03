@@ -1,10 +1,10 @@
 import { StyleSheet, View } from "react-native";
 import { registerRootComponent } from "expo";
 import Mapbox from "@rnmapbox/maps";
-
-Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY);
 import { testFunc } from "./utils/backend";
 import BackendTest from "./utils/BackendTest";
+import { useEffect, useState } from "react";
+Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY);
 
 export default function App() {
   const [test, setTest] = useState("");
@@ -17,10 +17,10 @@ export default function App() {
 
   return (
     <View style={styles.page}>
-      <View style={styles.container}>
-        <BackendTest />
+      <BackendTest />
+      {/* <View style={styles.container}>
         <Mapbox.MapView style={styles.map} />
-      </View>
+      </View> */}
     </View>
   );
 }
