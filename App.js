@@ -1,35 +1,43 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { db } from "./firebaseconfig";
-import { collection, getDocs } from "firebase/firestore";
+import { StyleSheet, View } from "react-native";
+import { registerRootComponent } from "expo";
+import Mapbox from "@rnmapbox/maps";
 import { testFunc } from "./utils/backend";
 import BackendTest from "./utils/BackendTest";
+import { useEffect, useState } from "react";
+Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY);
 
 export default function App() {
   const [test, setTest] = useState("");
 
   useEffect(() => {
     testFunc().then((res) => {
-      setTest(res)
-    })
+      setTest(res);
+    });
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.page}>
       <BackendTest />
-      <Text>mic test</Text>
-      <Text>{test}</Text>
-      <StatusBar style="auto" />
+      {/* <View style={styles.container}>
+        <Mapbox.MapView style={styles.map} />
+      </View> */}
     </View>
   );
 }
 
+registerRootComponent(App);
+
 const styles = StyleSheet.create({
-  container: {
+  page: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    height: 850,
+    width: 500,
+  },
+  map: {
+    flex: 1,
   },
 });
