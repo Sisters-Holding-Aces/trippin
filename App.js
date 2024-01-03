@@ -6,7 +6,10 @@ import Mapbox from "@rnmapbox/maps";
 import { testFunc } from "./utils/backend";
 import BackendTest from "./utils/BackendTest";
 import { useEffect, useState } from "react";
-Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY || process.env.DEV_MAPBOX_PUBLIC_API_KEY);
+Mapbox.setAccessToken(
+  process.env.MAPBOX_PUBLIC_API_KEY ||
+    "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
+);
 
 export default function App() {
   const [test, setTest] = useState("");
