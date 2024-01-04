@@ -7,20 +7,22 @@ import { testFunc } from "./utils/backend";
 import BackendTest from "./utils/BackendTest";
 import { useEffect, useState } from "react";
 import CustomMapView from "./components/CustomMapView";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebaseconfig";
 
 export default function App() {
-  const [test, setTest] = useState("");
+  const [user, setUser] = useState("");
 
   useEffect(() => {
-    testFunc().then((res) => {
-      setTest(res);
+    onAuthStateChanged(auth, (user) => {
+      setUser(user);
     });
   }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <MainContainer />
+        <MainContainer user={user} />
       </SafeAreaProvider>
     </SafeAreaView>
     // <View style={styles.page}>
