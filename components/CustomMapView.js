@@ -1,18 +1,30 @@
 import { StyleSheet, View } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
+import { Avatar, Button, Card, Text } from 'react-native-paper';
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const CustomMapView = () => {
+
+
+const CustomMapView = ({holidays}) => {
   const [calloutVisible, setCalloutVisible] = useState(false);
   const [location, setLocation] = useState({ longitude: -5, latitude: 55 });
+  const [selectedHoliday, setSelectedHoliday] = useState()
+  const camera = useRef(null);
+  const mapView = useRef(null);
+  
 
-  const [coordinates] = useState([-5, 55]);
+  
+
+  const [coordinates] = useState([-2.983333, 53.400002]);
+
+  
+
 
   useEffect(() => {
     (async () => {
@@ -33,13 +45,16 @@ const CustomMapView = () => {
     setCalloutVisible(true);
   };
 
-  const loadAnnotationUK = () => {
+
+  const loadAnnotation = (holiday) => {
+
     return (
       <Mapbox.PointAnnotation
-        key="annotationUK"
-        id="annotationUK"
-        coordinate={[0.1, 51.5]}
+        key={holiday.id}
+        id={holiday.id}
+        coordinate={holiday.locationData}
         onSelected={onMarkerPress}
+        
       >
         <View
           style={{
@@ -53,33 +68,62 @@ const CustomMapView = () => {
         ></View>
 
         <Mapbox.Callout
-          title="Welcome to London!"
-          contentStyle={{ borderRadius: 5 }}
-        ></Mapbox.Callout>
+          title={holiday.title + " " + holiday.info}
+          contentStyle={{}}
+        >
+        <View style={{width: 150, marginBottom: 150}}>
+        <Card>
+    <Card.Title title="Card Title" subtitle="Card Subtitle" />
+    <Card.Content>
+      <Text variant="titleLarge">Card title</Text>
+      <Text variant="bodySmall">Card content</Text>
+    </Card.Content>
+    <Card.Actions>
+      <Button style={{marginRight: 35}}>Ok</Button>
+    </Card.Actions>
+  </Card>
+        </View>
+        </Mapbox.Callout>
       </Mapbox.PointAnnotation>
     );
   };
 
+  
+
   return (
     <View style={styles.container}>
-      <Mapbox.MapView style={styles.map}>
-        <Mapbox.Camera zoomLevel={4} centerCoordinate={coordinates} />
+      <Mapbox.MapView style={styles.map}
+      deselectAnnotationOnTap
+      ref={mapView}
+      >
+        <Mapbox.Camera zoomLevel={4} centerCoordinate={coordinates}/>
 
-        <Mapbox.PointAnnotation id="uk" coordinate={coordinates} />
-        {/* 
+        <Mapbox.PointAnnotation title="scotland" id="uk" coordinate={coordinates} />
+  
         <Mapbox.PointAnnotation
           id="userLocation"
           coordinate={[location.longitude, location.latitude]}
           title="Your location"
-        /> */}
+        />
 
-        <View>{loadAnnotationUK()}</View>
+      
+        <View>{holidays.map((holiday)=>{ return loadAnnotation(holiday)})}</View>
+        <View>{holidays[0].memories.map((memory)=>{ return loadAnnotation(memory)})}</View>
+        <View>{holidays[1].memories.map((memory)=>{ return loadAnnotation(memory)})}</View>
+
       </Mapbox.MapView>
     </View>
   );
 };
 
 export default CustomMapView;
+
+const customStyles = {
+  callout: {
+    borderRadius: 5,
+    padding: 10
+  }
+}
 
 const styles = StyleSheet.create({
   page: {
