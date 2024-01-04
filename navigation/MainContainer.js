@@ -1,72 +1,39 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { useState } from "react";
+import { BottomNavigation, Text } from "react-native-paper";
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
-const homeName = "Home";
-const profileName = "Profile";
+const HomeRoute = () => <HomeScreen />;
 
-const Tab = createBottomTabNavigator();
+const ProfileRoute = () => <ProfileScreen />;
 
 export default function MainContainer() {
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {
+      key: "home",
+      title: "Home",
+      focusedIcon: "home",
+      unfocusedIcon: "home-outline",
+    },
+    {
+      key: "profile",
+      title: "Profile",
+      focusedIcon: "account",
+      unfocusedIcon: "account-outline",
+    },
+  ]);
+
+  const renderScene = BottomNavigation.SceneMap({
+    home: HomeRoute,
+    profile: ProfileRoute,
+  });
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName={homeName}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            let rn = route.name;
-
-            if (rn === homeName) {
-              iconName = focused ? "home" : "home-outline";
-            } else if (rn === profileName) {
-              iconName = focused ? "account" : "account-outline";
-            }
-
-            return (
-              <MaterialCommunityIcons
-                name={iconName}
-                size={size}
-                color={color}
-              />
-            );
-          },
-          headerShown: false,
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "grey",
-          tabBarLabelStyle: {
-            paddingBottom: 10,
-            fontSize: 15,
-          },
-          tabBarStyle: [
-            {
-              height: 60,
-            },
-          ],
-        })}
-      >
-        <Tab.Screen name={homeName} component={HomeScreen} />
-        <Tab.Screen name={profileName} component={ProfileScreen} />
-      </Tab.Navigator>
-      {/* <Tab.Navigator
-            initialRouteName={homeName}
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-                let rn = route.name;
-
-                if (rn === homeName) {
-                    iconName
-                }
-              },
-            })}
-          >
-            <Tab.Screen name={homeName} component={HomeScreen} />
-            <Tab.Screen name={profileName} component={ProfileScreen} />
-          </Tab.Navigator> */}
-    </NavigationContainer>
+    <BottomNavigation
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={renderScene}
+    />
   );
 }
