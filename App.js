@@ -24,8 +24,8 @@ export default function App() {
     //   </SafeAreaProvider>
     // </SafeAreaView>
     <View style={styles.page}>
-      {/* <BackendTest /> */}
-      <CustomMapView />
+      <BackendTest />
+      {/* <CustomMapView /> */}
     </View>
   );
 }
