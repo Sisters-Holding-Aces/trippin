@@ -1,4 +1,4 @@
-// import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import MainContainer from "./navigation/MainContainer";
 import { StyleSheet, View } from "react-native";
 import { registerRootComponent } from "expo";
@@ -11,15 +11,18 @@ import BackendTest from "./utils/testComponents/BackendTest";
 
 export default function App() {
   return (
-    // <SafeAreaView style={styles.AndroidSafeArea}>
-    //   <SafeAreaProvider>
-    //     <MainContainer />
-    //   </SafeAreaProvider>
-    // </SafeAreaView>
-    <View style={styles.page}>
-      <BeHolidaysTest />
-      {/* <CustomMapView /> */}
-    </View>
+
+    <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <MainContainer />
+      </SafeAreaProvider>
+    </SafeAreaView>
+    // <View style={styles.page}>
+// <BeHolidaysTest />    
+//   <BackendTest />
+    //   {/* <CustomMapView /> */}
+    // </View>
+
   );
 }
 
