@@ -1,4 +1,4 @@
-import { db } from "../firebaseconfig";
+import { db } from "../../firebaseconfig";
 import {
   collection,
   getDocs,
@@ -34,7 +34,7 @@ export const getUserByName = async (username) => {
       id: doc.id,
     }))[0];
   } catch (err) {
-    console.log(err);
+    return err;
   }
 };
 
