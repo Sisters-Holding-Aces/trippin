@@ -7,6 +7,7 @@ import BeMemoriesTest from "./BeMemoriesTest";
 
 export default BackendTest = () => {
     return (
+        
         <View style={styles.page}>
             {/* <BeHolidaysTest /> */}
             {/* <BeUsersTest /> */}

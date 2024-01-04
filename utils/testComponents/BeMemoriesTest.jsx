@@ -7,11 +7,14 @@ export default BeMemoriesTest = () => {
     const [memories, setMemories] = useState([]);
     const [change, setChange] = useState(false);
 
+    const userId = 'RKeEweJmC96pOoZEmzQn'
+    const holidayId = 'n0nzH7o7Y05e86nUwA8A'
+
     useEffect(() => {
-        memoriesByHoliday("RKeEweJmC96pOoZEmzQn", "n0nzH7o7Y05e86nUwA8A").then((res) => {
+        memoriesByHoliday(userId, holidayId).then((res) => {
             setMemories(res);
         });
-        // memoryById("RKeEweJmC96pOoZEmzQn", "n0nzH7o7Y05e86nUwA8A", 'OfrPbbsseZYWPTXyiSY7').then((res) => {
+        // memoryById(userId, holidayId, 'OfrPbbsseZYWPTXyiSY7').then((res) => {
         //     console.log(res)
         // })
         setChange(false)
@@ -23,8 +26,6 @@ export default BeMemoriesTest = () => {
       }
 
     const newMemory = () => {
-        const userId = 'RKeEweJmC96pOoZEmzQn'
-        const holidayId = 'n0nzH7o7Y05e86nUwA8A'
         const title = 'Checkpoint Charlie';
         const locationData = { latitude: 52.5075, longitude: 13.3904 };
         addMemory(userId, holidayId, title, locationData)
