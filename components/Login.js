@@ -1,12 +1,24 @@
 import { View, StyleSheet } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { useState } from "react";
-import { createAccount, logIn } from "../utils/authentication";
+import { createUser, userLogIn, userLogOut } from "../utils/backendView";
 
-export default function Login() {
+export default function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  function handleCreateAccount() {
+    createUser(email, password, username).then((res) => {
+      if (res === "user created") setIsLoggedIn(true);
+    });
+  }
+
+  function handleLogIn() {
+    userLogIn(email, password).then((res) => {
+      if (res === "user successfully logged in") setIsLoggedIn(true);
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -33,10 +45,8 @@ export default function Login() {
         onChangeText={(text) => setPassword(text)}
       ></TextInput>
       <View style={{ flexDirection: "row", gap: 20 }}>
-        <Button onPress={logIn(email, password)}>Log In</Button>
-        <Button onPress={createAccount(email, password, username)}>
-          Create Account
-        </Button>
+        <Button onPress={handleLogIn}>Log In</Button>
+        <Button onPress={handleCreateAccount}>Create Account</Button>
       </View>
     </View>
   );

@@ -13,27 +13,30 @@ import BeHolidaysTest from "./utils/testComponents/BeHolidaysTest";
 import BackendTest from "./utils/testComponents/BackendTest";
 
 export default function App() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
   }, []);
-  
-  return (
 
+  return (
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <MainContainer user={user} />
+        <MainContainer
+          user={user}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+        />
       </SafeAreaProvider>
     </SafeAreaView>
     // <View style={styles.page}>
-    //   <BeHolidaysTest />    
+    //   <BeHolidaysTest />
     //   <BackendTest />
     //   {/* <CustomMapView /> */}
     // </View>
-
   );
 }
 
