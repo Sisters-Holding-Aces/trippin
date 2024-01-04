@@ -8,12 +8,12 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { deleteUserDoc, getUserByName, postUser } from "./backend";
+import { deleteUserDoc, getUserByName, postUser } from "./backendUsers";
 
 export const createAccount = async (email, pass, username) => {
   if (!auth.currentUser) {
     const existingUser = await getUserByName(username);
-    if (existingUser.length === 0) {
+    if (!existingUser) {
       try {
         const newUser = await createUserWithEmailAndPassword(auth, email, pass);
         await updateProfile(newUser.user, { displayName: username });
@@ -50,7 +50,7 @@ export const removeUser = async () => {
   try {
     const userID = await getUserByName(auth.currentUser.displayName);
     await deleteUser(user);
-    await deleteUserDoc(userID[0].id);
+    await deleteUserDoc(userID.id);
     return "user deleted";
   } catch (err) {
     return err;

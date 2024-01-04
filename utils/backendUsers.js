@@ -3,41 +3,26 @@ import {
   collection,
   getDocs,
   doc,
-  getDoc,
   query,
   where,
   addDoc,
-  setDoc,
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
 
-const testRef = collection(db, "test-collection");
 const usersRef = collection(db, "users");
 
-const getFromDB = async (dbLocation) => {
+export const getUsers = async () => {
   try {
-    const { docs } = await getDocs(dbLocation);
+    const { docs } = await getDocs(usersRef);
     return docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
     }));
   } catch (err) {
-    console.error(err);
+    return err;
   }
 };
-
-export const testFunc = async () => {
-  try {
-    const contents = await getDocs(testRef);
-    const doc = contents.docs[0];
-    return doc.data().test_field;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const getUsers = async () => await getFromDB(usersRef);
 
 export const getUserByName = async (username) => {
   try {
@@ -47,7 +32,7 @@ export const getUserByName = async (username) => {
     return docs.map((doc) => ({
       ...doc.data(),
       id: doc.id,
-    }));
+    }))[0];
   } catch (err) {
     console.log(err);
   }

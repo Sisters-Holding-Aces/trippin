@@ -3,20 +3,13 @@ import MainContainer from "./navigation/MainContainer";
 import { StyleSheet, View } from "react-native";
 import { registerRootComponent } from "expo";
 
-import { testFunc } from "./utils/backend";
-import BackendTest from "./utils/BackendTest";
+import { testFunc } from "./utils/backendUsers";
 import { useEffect, useState } from "react";
 import CustomMapView from "./components/CustomMapView";
+import BeHolidaysTest from "./utils/testComponents/BeHolidaysTest";
+import BackendTest from "./utils/testComponents/BackendTest";
 
 export default function App() {
-  const [test, setTest] = useState("");
-
-  useEffect(() => {
-    testFunc().then((res) => {
-      setTest(res);
-    });
-  }, []);
-
   return (
     // <SafeAreaView style={styles.AndroidSafeArea}>
     //   <SafeAreaProvider>
@@ -24,7 +17,7 @@ export default function App() {
     //   </SafeAreaProvider>
     // </SafeAreaView>
     <View style={styles.page}>
-      <BackendTest />
+      <BeHolidaysTest />
       {/* <CustomMapView /> */}
     </View>
   );
