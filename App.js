@@ -6,20 +6,31 @@ import { registerRootComponent } from "expo";
 import { testFunc } from "./utils/backendUsers";
 import { useEffect, useState } from "react";
 import CustomMapView from "./components/CustomMapView";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebaseconfig";
 import BeHolidaysTest from "./utils/testComponents/BeHolidaysTest";
 import BackendTest from "./utils/testComponents/BackendTest";
 
 export default function App() {
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+  }, []);
+  
   return (
 
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <MainContainer />
+        <MainContainer user={user} />
       </SafeAreaProvider>
     </SafeAreaView>
     // <View style={styles.page}>
-// <BeHolidaysTest />    
-//   <BackendTest />
+    //   <BeHolidaysTest />    
+    //   <BackendTest />
     //   {/* <CustomMapView /> */}
     // </View>
 
