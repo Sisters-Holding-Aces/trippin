@@ -35,7 +35,12 @@ const CustomMapView = () => {
 
   const loadAnnotationUK = () => {
     return (
-      <Mapbox.PointAnnotation key="annotationUK" id="annotationUK" coordinate={[0.1, 51.5]} onSelected={onMarkerPress}>
+      <Mapbox.PointAnnotation
+        key="annotationUK"
+        id="annotationUK"
+        coordinate={[0.1, 51.5]}
+        onSelected={onMarkerPress}
+      >
         <View
           style={{
             height: 20,
@@ -47,7 +52,10 @@ const CustomMapView = () => {
           }}
         ></View>
 
-        <Mapbox.Callout title="Welcome to London!" contentStyle={{ borderRadius: 5 }}></Mapbox.Callout>
+        <Mapbox.Callout
+          title="Welcome to London!"
+          contentStyle={{ borderRadius: 5 }}
+        ></Mapbox.Callout>
       </Mapbox.PointAnnotation>
     );
   };
