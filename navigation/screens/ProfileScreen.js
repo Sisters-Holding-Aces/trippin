@@ -1,23 +1,37 @@
 import { Text, View, StyleSheet } from "react-native";
 import Header from "../../components/Header";
 import { TextInput, Button } from "react-native-paper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../../firebaseconfig";
 import Login from "../../components/Login";
-import { logOut } from "../../utils/authentication";
+import { userLogOut } from "../../utils/backendView";
 
-export default function ProfileScreen({ user }) {
+export default function ProfileScreen({ user, isLoggedIn, setIsLoggedIn }) {
   console.log("PROFILE USER", user);
+
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+  }, [isLoggedIn]);
+
   return (
     <>
       <Header />
-      {user ? (
+      {isLoggedIn ? (
         <View style={styles.container}>
-          <Text>Hello</Text>
-          <Button onPress={logOut()}>Log Out</Button>
+          <Text>Hello {user.displayName}</Text>
+          <Button
+            onPress={() => {
+              userLogOut();
+              setIsLoggedIn(false);
+            }}
+          >
+            Log Out
+          </Button>
         </View>
       ) : (
-        <Login />
+        <Login setIsLoggedIn={setIsLoggedIn} />
       )}
     </>
   );

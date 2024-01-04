@@ -3,9 +3,15 @@ import { BottomNavigation, Text } from "react-native-paper";
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
-export default function MainContainer({ user }) {
+export default function MainContainer({ user, isLoggedIn, setIsLoggedIn }) {
   const HomeRoute = () => <HomeScreen />;
-  const ProfileRoute = () => <ProfileScreen user={user} />;
+  const ProfileRoute = () => (
+    <ProfileScreen
+      user={user}
+      isLoggedIn={isLoggedIn}
+      setIsLoggedIn={setIsLoggedIn}
+    />
+  );
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {
