@@ -42,7 +42,7 @@ export const postUser = async (username, email) => {
   await addDoc(usersRef, { username: username, email: email });
 };
 
-export const patchUser = async (field, input, userId) => {
+export const patchUser = async (userId, field, input) => {
   const docRef = doc(db, "users", userId);
   const data = { [field]: input };
   await updateDoc(docRef, data);
