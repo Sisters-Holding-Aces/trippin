@@ -16,24 +16,36 @@ const MarkerWithPopup = ({ holiday }) => {
   };
 
   return (
-    <Mapbox.MarkerView
-      key={`MarkerView-${holiday.locationData.join("-")}`}
-      coordinate={holiday.locationData}
-      anchor={{ x: 0.5, y: 0.5 }}
-    >
-      <View>
+    <>
+      {/* marker icon */}
+      <Mapbox.MarkerView
+        key={`MarkerView-Icon-${holiday.locationData.join("-")}`}
+        coordinate={holiday.locationData}
+        anchor={{ x: 0.5, y: 0.5 }}
+        allowOverlap={true}
+      >
         <IconButton icon="heart-circle" size={40} onPress={togglePopup} style={{ margin: 0 }} />
-        <Card style={{ display: showPopup ? "flex" : "none", margin: 0 }}>
+      </Mapbox.MarkerView>
+
+      {/* popup */}
+      <Mapbox.MarkerView
+        key={`MarkerView-Popup-${holiday.locationData.join("-")}`}
+        coordinate={holiday.locationData}
+        anchor={{ x: 0, y: 0 }}
+        allowOverlap={true}
+      >
+        <Card style={{ display: showPopup ? "" : "none", margin: 0 }}>
           <Card.Content>
             <Text variant="titleLarge">{holiday.title}</Text>
             <Text variant="bodyMedium">{holiday.info}</Text>
           </Card.Content>
           <Card.Actions>
-            <Button variant="">See more</Button>
+            <Button mode="text">See more</Button>
+            <IconButton icon="close-circle-outline" size={20} onPress={togglePopup} style={{ margin: 0 }} />
           </Card.Actions>
         </Card>
-      </View>
-    </Mapbox.MarkerView>
+      </Mapbox.MarkerView>
+    </>
   );
 };
 
