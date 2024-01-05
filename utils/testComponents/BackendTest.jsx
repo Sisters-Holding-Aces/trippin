@@ -9,8 +9,8 @@ export default BackendTest = () => {
     return (
         
         <View style={styles.page}>
-            {/* <BeUsersTest /> */}
-            <BeHolidaysTest />
+            <BeUsersTest />
+            {/* <BeHolidaysTest /> */}
             {/* <BeMemoriesTest /> */}
         </View>
       );
