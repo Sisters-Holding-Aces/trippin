@@ -28,7 +28,7 @@ export default BeHolidaysTest = () => {
   }
 
   const changeHol = async (holId) => {
-    await editHoliday('info', 'Went Sydney lol', "JqijYB2RTXwLKi3bSWXX", holId)
+    await editHoliday("JqijYB2RTXwLKi3bSWXX", holId, 'info', 'Went Cape Town :)')
     setHolAdded(true)
   }
 

@@ -47,7 +47,7 @@ export default BeUsersTest = () => {
   };
 
   const updatedUser = () => {
-    editUserInfo("bio", "helloooo", "JqijYB2RTXwLKi3bSWXX");
+    editUserInfo("JqijYB2RTXwLKi3bSWXX", "bio", "hello");
   };
 
   const deleteAccount2 = () => {

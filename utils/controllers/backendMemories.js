@@ -44,3 +44,18 @@ export const postMemory = async (userId, holidayId, title, location) => {
     };
     await addDoc(MemoryRef, data);
   };
+
+  export const patchMemory = async (userId, holidayId, memoryId, field, input) => {
+    const docRef = doc(db, "users", userId, "holidays", holidayId, "memories", memoryId);
+    const data = {[field]: input}
+    try {
+        await updateDoc(docRef, data);
+    } catch (err) {
+        return err
+    }
+  }
+  
+  export const deleteMemory = async (userId, holidayId, memoryId) => {
+    const docRef = doc(db, "users", userId, "holidays", holidayId, "memories", memoryId);
+    await deleteDoc(docRef);
+  };

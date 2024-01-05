@@ -45,7 +45,7 @@ export const postHoliday = async (userId, title, location) => {
   await addDoc(holidayRef, data);
 };
 
-export const patchHoliday = async (field, input, userId, holidayId) => {
+export const patchHoliday = async (userId, holidayId, field, input) => {
   const docRef = doc(db, "users", userId, "holidays", holidayId);
   const data = {[field]: input}
   await updateDoc(docRef, data);

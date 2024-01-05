@@ -1,6 +1,6 @@
 import { Button, Text, View } from "react-native";
 import { useEffect, useState } from "react";
-import { addMemory, memoriesByHoliday, memoryById } from "../backendView";
+import { addMemory, editMemory, memoriesByHoliday, memoryById, removeMemory } from "../backendView";
 import { timestampToDate } from "../utils";
 
 export default BeMemoriesTest = () => {
@@ -32,6 +32,16 @@ export default BeMemoriesTest = () => {
         setChange(true)
     }
 
+    const changeMem = async (memoryId) => {
+        await editMemory(userId, holidayId, memoryId, 'note', 'Its lovely')
+        setChange(true)
+    }
+
+    const delMem = async (memoryId) => {
+        await removeMemory(userId, holidayId, memoryId)
+        setChange(true)
+    }
+
     return (
         <View>
             {memories.map((memory) => {
@@ -39,8 +49,8 @@ export default BeMemoriesTest = () => {
                 <View>
                     <Text>{memory.title} - {dateChanger(memory.date)} - {memory.note ? memory.note : 'noinfo'}</Text>
                     {/* {console.log(memory.locationData.latitude)} */}
-                    {/* <Button onPress={() => changeHol(hol.id)} title="change holiday"></Button> */}
-                    {/* <Button onPress={() => delHol(hol.id)} title="delete holiday"></Button> */}
+                    <Button onPress={() => changeMem(memory.id)} title="change memory"></Button>
+                    <Button onPress={() => delMem(memory.id)} title="delete memory"></Button>
                 </View>
                 );
             })}
