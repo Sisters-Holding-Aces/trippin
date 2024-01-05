@@ -13,6 +13,7 @@ import {
   Timestamp,
   GeoPoint,
 } from "firebase/firestore";
+import { titleCheck, locationChecker, dateValidator } from "./controllerUtils";
 
 export const getHolidays = async (userId) => {
   const holidayRef = collection(db, "users", userId, "holidays");
@@ -42,20 +43,64 @@ export const getHoliday = async (userId, holidayId) => {
 export const postHoliday = async (userId, title, location) => {
   const holidayRef = collection(db, "users", userId, "holidays");
   const currentDate = Timestamp.now();
-  const currentLocation = new GeoPoint(location.latitude, location.longitude);
-  const data = {
-    title: title,
-    locationData: currentLocation,
-    startDate: currentDate,
-  };
   
-  await addDoc(holidayRef, data);
+  const validTitle = await titleCheck(userId, title)
+  const validLocation = await locationChecker(location)
+
+  if (!validTitle) {
+    return {msg: `You already have a holiday called ${title}`}
+  } else if (!validLocation) {
+    return {msg: `Invalid location data`}
+  } else {
+    const currentLocation = new GeoPoint(location.latitude, location.longitude);
+    const data = {
+      title: title,
+      locationData: currentLocation,
+      startDate: currentDate,
+    };
+    try {
+      const newDoc = await addDoc(holidayRef, data);
+      return ({...data, id: newDoc.id})
+    } catch (err) {
+      return err
+    }
+  }
 };
 
 export const patchHoliday = async (userId, holidayId, field, input) => {
   const docRef = doc(db, "users", userId, "holidays", holidayId);
   const data = {[field]: input}
-  await updateDoc(docRef, data);
+
+  const tryPatch = async (newDate) => {
+    if (newDate) {
+      data[field] = newDate
+    }
+    try {
+      await updateDoc(docRef, data);
+      const newDoc = await getDoc(docRef)
+      return newDoc.data()
+    } catch (err) {
+      return err
+    }
+  }
+
+  switch (field) {
+    case 'info': return tryPatch()
+    case 'locationData':
+      const validLocation = await locationChecker(input)
+      return validLocation ? tryPatch() : {msg: `Invalid location data`}
+    case 'startDate':
+      const validDate = await dateValidator(input)
+      const inputDate = new Date(input)
+      const newDate = Timestamp.fromDate(inputDate)
+      return validDate ? tryPatch(newDate) : {msg: `Invalid date/time input`}
+    case 'title':
+      const validTitle = await titleCheck(userId, input)
+      return validTitle ? tryPatch() : {msg: `You already have a holiday called ${input}`}
+    default:
+      return {msg: `${field} is not a valid field in a holiday document`} 
+  }
+
 }
 
 export const deleteHoliday = async (userId, holidayId) => {
