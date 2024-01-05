@@ -9,6 +9,7 @@ import CustomMapView from "./components/CustomMapView";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseconfig";
 import { userCheck } from "./utils/backendView";
+import BackendTest from "./utils/testComponents/BackendTest";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -29,19 +30,19 @@ export default function App() {
   }, [userloggedin]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <MainContainer
-          user={user}
-          setUser={setUser}
-          setUserloggedin={setUserloggedin}
-        />
-      </SafeAreaProvider>
-    </SafeAreaView>
+    // <SafeAreaView style={{ flex: 1 }}>
+    //   <SafeAreaProvider>
+    //     <MainContainer
+    //       user={user}
+    //       setUser={setUser}
+    //       setUserloggedin={setUserloggedin}
+    //     />
+    //   </SafeAreaProvider>
+    // </SafeAreaView>
     // <View style={styles.page}>
     //   <CustomMapView />
     // </View>
-    // <BackendTest />
+    <BackendTest />
   );
 }
 
