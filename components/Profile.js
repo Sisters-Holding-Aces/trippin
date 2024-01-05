@@ -1,24 +1,28 @@
+import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Card, Text } from "react-native-paper";
+import { getUserInfo } from "../utils/backendView";
 
 export default function Profile({ user }) {
+  const [userInfo, setUserInfo]= useState({})
+
+  useEffect(()=>{
+    getUserInfo(user.displayName).then((res)=>{
+        setUserInfo(res)
+    })
+  },[])
+
   return (
     <View style={styles.container}>
       <Avatar.Text style={styles.avatar} size={150} label={user.displayName} />
-      {user.bio ? (
+      {userInfo.bio ? (
         <Card style={styles.bio}>
           <Card.Content>
             <Text variant="titleLarge">Bio</Text>
-            <Text variant="bodyMedium">{user.bio}</Text>
+            <Text variant="bodyMedium">{userInfo.bio}</Text>
           </Card.Content>
         </Card>
       ) : null}
-      <Card style={styles.bio}>
-        <Card.Content>
-          <Text variant="titleLarge">Bio</Text>
-          <Text variant="bodyMedium">Card content</Text>
-        </Card.Content>
-      </Card>
     </View>
   );
 }
