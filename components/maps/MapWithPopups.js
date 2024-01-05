@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Mapbox from "@rnmapbox/maps";
 import { Button, Card, IconButton, Text } from "react-native-paper";
 import MarkerWithPopup from "./MarkerWithPopup";
+import ActionSheet from "./ActionSheet";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
@@ -26,6 +27,7 @@ const MapWithPopups = ({ holidays }) => {
           return <MarkerWithPopup key={`MarkerView-${holiday.locationData.join("-")}`} holiday={holiday} />;
         })}
       </Mapbox.MapView>
+      <ActionSheet/>
     </View>
   );
 };
