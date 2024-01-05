@@ -7,18 +7,20 @@ export default BeHolidaysTest = () => {
   const [hols, setHols] = useState([]);
   const [holAdded, setHolAdded] = useState(false);
 
+  const testUser = "JqijYB2RTXwLKi3bSWXX"
+
   useEffect(() => {
-    holidaysByUser("JqijYB2RTXwLKi3bSWXX").then((res) => {
+    holidaysByUser(testUser).then((res) => {
       setHols(res);
     });
-    // holidayById('RKeEweJmC96pOoZEmzQn', 'n0nzH7o7Y05e86nUwA8A').then((res) => {
+    // holidayById(testUser, 'uNFhKPtp3HT3taCJJZRg').then((res) => {
     //     console.log(res)
     // })
     setHolAdded(false)
   }, [holAdded]);
 
   const createHol = () => {
-    addHoliday("JqijYB2RTXwLKi3bSWXX", 'Cape Town', { latitude: -33.9258, longitude: 18.4232 });
+    addHoliday(testUser, 'Cape Town', { latitude: -33.9258, longitude: 18.4232 });
     setHolAdded(true)
   };
 
@@ -28,12 +30,12 @@ export default BeHolidaysTest = () => {
   }
 
   const changeHol = async (holId) => {
-    await editHoliday("JqijYB2RTXwLKi3bSWXX", holId, 'info', 'Went Cape Town :)')
+    await editHoliday(testUser, holId, 'info', 'Went Cape Town :)')
     setHolAdded(true)
   }
 
   const delHol = async (holId) => {
-    await removeHoliday("JqijYB2RTXwLKi3bSWXX", holId)
+    await removeHoliday(testUser, holId)
     setHolAdded(true)
   }
 

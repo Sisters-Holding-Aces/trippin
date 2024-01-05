@@ -29,8 +29,14 @@ export const getHolidays = async (userId) => {
 
 export const getHoliday = async (userId, holidayId) => {
   const docRef = doc(db, "users", userId, "holidays", holidayId);
-  const docSnap = await getDoc(docRef);
-  return docSnap.data();
+  try {
+    const docSnap = await getDoc(docRef);
+    const holData = docSnap.data()
+    if (holData) return holData;
+    else return {msg: 'holiday not found'}
+  } catch (err) {
+    return err
+  }
 };
 
 export const postHoliday = async (userId, title, location) => {
@@ -42,6 +48,7 @@ export const postHoliday = async (userId, title, location) => {
     locationData: currentLocation,
     startDate: currentDate,
   };
+  
   await addDoc(holidayRef, data);
 };
 
