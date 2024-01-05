@@ -1,34 +1,45 @@
 import { View, StyleSheet } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import { TextInput, Button, SegmentedButtons } from "react-native-paper";
 import { useState } from "react";
-import { createUser, userLogIn, userLogOut } from "../utils/backendView";
+import {
+  createUser,
+  userCheck,
+  userLogIn,
+  userLogOut,
+} from "../utils/backendView";
 
-export default function Login({ setIsLoggedIn }) {
+export default function Login({ setUser, setUserloggedin }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  function handleCreateAccount() {
-    createUser(email, password, username).then((res) => {
-      if (res === "user created") setIsLoggedIn(true);
-    });
-  }
-
-  function handleLogIn() {
-    userLogIn(email, password).then((res) => {
-      if (res === "user successfully logged in") setIsLoggedIn(true);
-    });
-  }
+  const [signInSignUp, setSignInSignUp] = useState("log in");
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={username}
-        placeholder="Username"
-        autoCapitalize="none"
-        onChangeText={(text) => setUsername(text)}
-      ></TextInput>
+      <SegmentedButtons
+        style={styles.toggle}
+        value={signInSignUp}
+        onValueChange={setSignInSignUp}
+        buttons={[
+          {
+            value: "log in",
+            label: "log in",
+          },
+          {
+            value: "create account",
+            label: "create account",
+          },
+        ]}
+      />
+      {signInSignUp === "create account" ? (
+        <TextInput
+          style={styles.input}
+          value={username}
+          placeholder="Username"
+          autoCapitalize="none"
+          onChangeText={(text) => setUsername(text)}
+        ></TextInput>
+      ) : null}
       <TextInput
         style={styles.input}
         value={email}
@@ -44,10 +55,29 @@ export default function Login({ setIsLoggedIn }) {
         autoCapitalize="none"
         onChangeText={(text) => setPassword(text)}
       ></TextInput>
-      <View style={{ flexDirection: "row", gap: 20 }}>
-        <Button onPress={handleLogIn}>Log In</Button>
-        <Button onPress={handleCreateAccount}>Create Account</Button>
-      </View>
+      {signInSignUp === "create account" ? (
+        <Button
+          onPress={() => {
+            createUser(email, password, username).then(() => {
+              setUser(userCheck());
+              setUserloggedin(true);
+            });
+          }}
+        >
+          Create Account
+        </Button>
+      ) : (
+        <Button
+          onPress={() => {
+            userLogIn(email, password).then(() => {
+              setUser(userCheck());
+              setUserloggedin(true);
+            });
+          }}
+        >
+          Log In
+        </Button>
+      )}
     </View>
   );
 }
@@ -63,5 +93,9 @@ const styles = StyleSheet.create({
     height: 30,
     padding: 10,
     minWidth: 300,
+  },
+  toggle: {
+    maxWidth: 300,
+    paddingBottom: 20,
   },
 });
