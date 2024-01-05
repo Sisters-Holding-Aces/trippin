@@ -8,32 +8,33 @@ import CustomMapView from "./components/CustomMapView";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseconfig";
-import BackendTest from "./utils/testComponents/BackendTest";
+import { userCheck } from "./utils/backendView";
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userloggedin, setUserloggedin] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-  }, []);
+    const userChecker = userCheck("bool");
+    if (!userChecker) {
+      setUser(null);
+    } else {
+      const userdata = userCheck();
+      setUser(userdata);
+    }
+    setUserloggedin(false);
+  }, [userloggedin]);
 
   return (
-    // <SafeAreaView style={{ flex: 1 }}>
-    //   <SafeAreaProvider>
-    //     <MainContainer
-    //       user={user}
-    //       isLoggedIn={isLoggedIn}
-    //       setIsLoggedIn={setIsLoggedIn}
-    //     />
-    //   </SafeAreaProvider>
-    // </SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <MainContainer user={user} setUser={setUser} setUserloggedin={setUserloggedin}/>
+      </SafeAreaProvider>
+    </SafeAreaView>
     // <View style={styles.page}>
     //   <CustomMapView />
     // </View>
-    <BackendTest />
+    // <BackendTest />
   );
 }
 
