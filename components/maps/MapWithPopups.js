@@ -5,7 +5,7 @@ import markerMemory from "../../assets/marker-memory.png";
 // import * as Location from "expo-location";
 import Mapbox, { FillLayer, Images, LineLayer, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
 import { Button, Card, IconButton, Text } from "react-native-paper";
-import MarkerWithPopup from "./MarkerWithPopup";
+import HolidayPopup from "./HolidayPopup";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
@@ -121,7 +121,7 @@ const MapWithPopups = ({ holidays }) => {
           <Mapbox.SymbolLayer id="holidayPinsLayer" style={customStyles.holidayPinsLayer} maxZoomLevel={8} />
           {holidays.map((holiday) => {
             return (
-              <MarkerWithPopup
+              <HolidayPopup
                 key={`holidayPopup-${holiday.id}`}
                 holiday={holiday}
                 isSelected={selectedHoliday === holiday.id ? true : false}

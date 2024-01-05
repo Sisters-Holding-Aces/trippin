@@ -8,7 +8,7 @@ Mapbox.setAccessToken(
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MarkerWithPopup = ({ holiday, isSelected, setSelectedHoliday }) => {
+const HolidayPopup = ({ holiday, isSelected, setSelectedHoliday }) => {
   const hidePopup = () => {
     setSelectedHoliday(null);
   };
@@ -34,4 +34,4 @@ const MarkerWithPopup = ({ holiday, isSelected, setSelectedHoliday }) => {
   );
 };
 
-export default MarkerWithPopup;
+export default HolidayPopup;
