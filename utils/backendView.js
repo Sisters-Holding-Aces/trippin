@@ -20,7 +20,7 @@ export const createUser = async (email, pass, username) => await createAccount(e
 export const userLogIn = async (email, pass) => await logIn(email, pass);
 export const userLogOut = async () => await logOut();
 export const deleteAccount = async () => await removeUser();
-export const userCheck = (bool) => signedInUser(bool)
+export const userCheck = async(bool) => await signedInUser(bool)
 
 // users collection
 export const allUsers = async () => await getUsers();

@@ -15,20 +15,27 @@ export default function App() {
   const [userloggedin, setUserloggedin] = useState(false);
 
   useEffect(() => {
-    const userChecker = userCheck("bool");
-    if (!userChecker) {
-      setUser(null);
-    } else {
-      const userdata = userCheck();
-      setUser(userdata);
-    }
+    const userSet = async () => {
+      const userChecker = await userCheck("bool");
+      if (!userChecker) {
+        setUser(null);
+      } else {
+        const userdata = await userCheck();
+        setUser(userdata);
+      }
+    };
+    userSet();
     setUserloggedin(false);
   }, [userloggedin]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <MainContainer user={user} setUser={setUser} setUserloggedin={setUserloggedin}/>
+        <MainContainer
+          user={user}
+          setUser={setUser}
+          setUserloggedin={setUserloggedin}
+        />
       </SafeAreaProvider>
     </SafeAreaView>
     // <View style={styles.page}>
