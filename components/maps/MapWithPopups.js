@@ -1,5 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
+import markerHoliday from "../../assets/marker-holiday.png";
+import markerMemory from "../../assets/marker-memory.png";
 // import * as Location from "expo-location";
 import Mapbox, { FillLayer, Images, LineLayer, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
 import { Button, Card, IconButton, Text } from "react-native-paper";
@@ -12,9 +14,9 @@ Mapbox.setAccessToken(
 
 const MapWithPopups = ({ holidays }) => {
   const [location, setLocation] = useState({ longitude: -5, latitude: 55 });
-  const [selectedHoliday, setSelectedHoliday] = useState();
+  const [selectedHoliday, setSelectedHoliday] = useState(null);
+
   const mapView = useRef(null);
-  const [images, setImages] = useState({ options: { markerHoliday: "../../assets/marker-holiday.png" } });
 
   const [coordinates] = useState([-2.983333, 53.400002]);
 
@@ -33,7 +35,7 @@ const MapWithPopups = ({ holidays }) => {
     },
   });
 
-  const holidayFeatureCollection = {
+  const [holidayFeatureCollection, setHolidayFeatureCollection] = useState({
     type: "FeatureCollection",
     features: [
       ...holidays.map((holiday) => {
@@ -41,7 +43,8 @@ const MapWithPopups = ({ holidays }) => {
           type: "Feature",
           id: `holiday-${holiday.id}`,
           properties: {
-            icon: "markerHoliday",
+            popupType: "holiday",
+            id: holiday.id,
             description: holiday.info,
           },
           geometry: {
@@ -51,22 +54,82 @@ const MapWithPopups = ({ holidays }) => {
         };
       }),
     ],
+  });
+
+  const [memoryFeatureCollection, setMemoryFeatureCollection] = useState({});
+
+  const getMemoryFeatures = (holidays) => {
+    const memoryFeatures = [];
+    holidays.forEach((holiday) => {
+      holiday.memories.forEach((memory) => {
+        const memoryGeoJson = {
+          type: "Feature",
+          id: `memory-${memory.id}`,
+          properties: {
+            popupType: "memory",
+            description: memory.info,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: memory.locationData,
+          },
+        };
+
+        memoryFeatures.push(memoryGeoJson);
+      });
+    });
+
+    return memoryFeatures;
+  };
+
+  useEffect(() => {
+    const memoriesGeoJson = {
+      type: "FeatureCollection",
+      features: getMemoryFeatures(holidays),
+    };
+
+    setMemoryFeatureCollection(memoriesGeoJson);
+  }, []);
+
+  const onPinPress = (e) => {
+    console.log("Pin PRESSED!!");
+    console.log(e);
+    const feature = e.features[0];
+    const { popupType, id } = feature.properties;
+
+    if (popupType === "holiday") {
+      if (selectedHoliday === id) {
+        setSelectedHoliday(null);
+      } else {
+        setSelectedHoliday(id);
+      }
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Dark} deselectAnnotationOnTap ref={mapView}>
+      <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} ref={mapView}>
         <Mapbox.Camera zoomLevel={4} centerCoordinate={coordinates} />
 
-        {/* {holidays.map((holiday) => {
-          return <MarkerWithPopup key={`MarkerView-${holiday.locationData.join("-")}`} holiday={holiday} />;
-        })} */}
+        <Mapbox.Images images={{ markerHoliday, markerMemory }} />
 
-        <Images images={images.options} />
+        <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
+          <Mapbox.SymbolLayer id="memoryPinsLayer" style={customStyles.memoryPinsLayer} minZoomLevel={8} />
+        </Mapbox.ShapeSource>
 
-        <ShapeSource id="holidayShapeSource" shape={holidayFeatureCollection}>
-          <SymbolLayer id="holidayIconsLayer" style={customStyles.icon} minZoomLevel={4} />
-        </ShapeSource>
+        <Mapbox.ShapeSource id="holidayPinsSource" shape={holidayFeatureCollection} onPress={onPinPress}>
+          <Mapbox.SymbolLayer id="holidayPinsLayer" style={customStyles.holidayPinsLayer} maxZoomLevel={8} />
+          {holidays.map((holiday) => {
+            return (
+              <MarkerWithPopup
+                key={`holidayPopup-${holiday.id}`}
+                holiday={holiday}
+                isSelected={selectedHoliday === holiday.id ? true : false}
+                setSelectedHoliday={setSelectedHoliday}
+              />
+            );
+          })}
+        </Mapbox.ShapeSource>
 
         <ShapeSource id="source" shape={polygon}>
           <FillLayer id="fill" style={{ fillColor: "blue", fillOpacity: 0.7 }} />
@@ -84,9 +147,17 @@ const customStyles = {
     borderRadius: 5,
     padding: 10,
   },
-  icon: {
-    iconImage: ["get", "icon"],
-    iconSize: 100,
+  holidayPinsLayer: {
+    iconAllowOverlap: true,
+    iconAnchor: "bottom",
+    iconSize: 1.0,
+    iconImage: "markerHoliday",
+  },
+  memoryPinsLayer: {
+    iconAllowOverlap: true,
+    iconAnchor: "bottom",
+    iconSize: 1.0,
+    iconImage: "markerMemory",
   },
 };
 
