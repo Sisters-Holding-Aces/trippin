@@ -1,9 +1,7 @@
-import { auth } from "../firebaseconfig";
+import { auth } from "../../firebaseconfig";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
-  getAuth,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -56,3 +54,12 @@ export const removeUser = async () => {
     return err;
   }
 };
+
+export const signedInUser = (bool) => {
+  if (bool === 'bool') {
+    if (auth?.currentUser) return true
+    else return false
+  } else if (auth?.currentUser) {
+    return auth?.currentUser
+  } else return {msg: 'No current user'}
+}
