@@ -1,14 +1,33 @@
-import { auth } from "../firebaseconfig";
+import { auth, db } from "../../firebaseconfig";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
-  getAuth,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { deleteUserDoc, getUserByName, postUser } from "./backendUsers";
+import { getUserByName } from "./backendUsers";
+import { addDoc, collection, deleteDoc, doc } from "@firebase/firestore";
+
+const postUser = async (username, email) => {
+  const usersRef = collection(db, "users");
+  try {
+    await addDoc(usersRef, { username: username, email: email });
+  } catch (err) {
+    let user = auth?.currentUser;
+    await deleteUser(user);
+    return err
+  }
+};
+
+const deleteUserDoc = async (userId) => {
+  const docRef = doc(db, "users", userId);
+  try {
+    await deleteDoc(docRef);
+  } catch (err) {
+    return err
+  }
+};
 
 export const createAccount = async (email, pass, username) => {
   if (!auth.currentUser) {
@@ -17,16 +36,16 @@ export const createAccount = async (email, pass, username) => {
       try {
         const newUser = await createUserWithEmailAndPassword(auth, email, pass);
         await updateProfile(newUser.user, { displayName: username });
-        postUser(username, newUser.user.email);
+        await postUser(username, newUser.user.email);
         return "user created";
       } catch (err) {
         return err;
       }
     } else {
-      return "username taken";
+      return {msg: `username: ${username} is already in use`};
     }
   } else {
-    return "user is logged in";
+    return {msg: `${auth.currentUser.displayName} is logged in`};
   }
 };
 
@@ -39,7 +58,7 @@ export const logIn = async (email, pass) => {
       return err;
     }
   } else {
-    return "user is logged in";
+    return {msg: `${auth.currentUser.displayName} is logged in`};
   }
 };
 
@@ -51,8 +70,17 @@ export const removeUser = async () => {
     const userID = await getUserByName(auth.currentUser.displayName);
     await deleteUser(user);
     await deleteUserDoc(userID.id);
-    return "user deleted";
+    return {msg: `${user.displayName} deleted`};
   } catch (err) {
     return err;
   }
 };
+
+export const signedInUser = async (bool) => {
+  if (bool === 'bool') {
+    if (auth?.currentUser) return true
+    else return false
+  } else if (auth?.currentUser) {
+    return auth?.currentUser
+  } else return {msg: 'No current user'}
+}
