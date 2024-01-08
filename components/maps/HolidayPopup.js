@@ -15,7 +15,7 @@ const HolidayPopup = ({ holiday, isSelected, setSelectedHoliday }) => {
     <Mapbox.MarkerView // popup
       key={`MarkerView-Popup-${holiday.locationData.join("-")}`}
       coordinate={holiday.locationData}
-      anchor={{ x: 0, y: 0 }}
+      anchor={{ x: 0.5, y: 0 }}
       allowOverlap={true}
     >
       <Card style={{ display: isSelected ? "" : "none", margin: 0 }}>

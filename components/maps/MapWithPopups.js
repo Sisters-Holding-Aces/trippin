@@ -17,17 +17,23 @@ const MapWithPopups = ({ holidays }) => {
   const [selectedMemory, setSelectedMemory] = useState(null);
 
   const mapView = useRef(null);
+  const camera = useRef(null);
 
-  const [coordinates] = useState(holidays[0].locationData);
+  const [coordinates, setCoordinates] = useState(holidays[0].locationData);
 
   const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
   const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(holidays), [holidays]);
 
-  const onPinPress = (e) => {
+  const onPinPress = async (e) => {
+    // gets the geojson feature at the pin
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
 
+    // centers the selected pin on the screen
+    setCoordinates(feature.geometry.coordinates);
+
+    // sets selected holiday/memory
     if (popupType === "holiday") {
       if (selectedHoliday === id) {
         setSelectedHoliday(null);
@@ -77,8 +83,8 @@ const MapWithPopups = ({ holidays }) => {
 
   return (
     <View style={styles.container}>
-      <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} ref={mapView}>
-        <Mapbox.Camera zoomLevel={4} centerCoordinate={coordinates} />
+      <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.TrafficNight} ref={mapView}>
+        <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} />
 
         <Mapbox.Images images={{ markerHoliday, markerMemory }} />
 

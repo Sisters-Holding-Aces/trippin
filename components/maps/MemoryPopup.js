@@ -15,7 +15,7 @@ const MemoryPopup = ({ memory, isSelected, setSelectedMemory }) => {
     <Mapbox.MarkerView // popup
       key={`MarkerView-Popup-${memory.locationData.join("-")}`}
       coordinate={memory.locationData}
-      anchor={{ x: 0, y: 0 }}
+      anchor={{ x: 0.5, y: 0 }}
       allowOverlap={true}
     >
       <Card style={{ display: isSelected ? "" : "none", margin: 0 }}>
