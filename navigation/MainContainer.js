@@ -15,7 +15,7 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
     />
   );
   const AllHolidaysRoute = () => <AllHolidaysScreen user={user} />;
-  
+
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([
     {
@@ -42,7 +42,7 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
           unfocusedIcon: "home-outline",
         },
         {
-          key: "holidays",
+          key: "allHolidays",
           title: "My Holidays",
           focusedIcon: "airplane",
           unfocusedIcon: "account-outline",
@@ -71,7 +71,6 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
       ]);
       setIndex(1);
     }
-    console.log(index);
   }, [user]);
 
   const renderScene = BottomNavigation.SceneMap({
