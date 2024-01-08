@@ -1,6 +1,7 @@
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import MainContainer from "./navigation/MainContainer";
 import { StyleSheet, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { registerRootComponent } from "expo";
 
 import { useEffect, useState } from "react";
@@ -26,11 +27,13 @@ export default function App() {
   }, [userloggedin]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <MainContainer user={user} setUser={setUser} setUserloggedin={setUserloggedin}/>
-      </SafeAreaProvider>
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <MainContainer user={user} setUser={setUser} setUserloggedin={setUserloggedin} />
+        </SafeAreaProvider>
+      </SafeAreaView>
+    </GestureHandlerRootView>
     // <View style={styles.page}>
     //   <CustomMapView />
     // </View>
