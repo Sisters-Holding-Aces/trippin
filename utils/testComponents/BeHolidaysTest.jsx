@@ -7,7 +7,7 @@ export default BeHolidaysTest = () => {
   const [hols, setHols] = useState([]);
   const [holAdded, setHolAdded] = useState(false);
 
-  const testUser = "JqijYB2RTXwLKi3bSWXX"
+  const testUser = "TxiSR8vZCwWwln2WdENh"
 
   useEffect(() => {
     holidaysByUser(testUser).then((res) => {
@@ -20,8 +20,8 @@ export default BeHolidaysTest = () => {
   }, [holAdded]);
 
   const createHol = () => {
-    const title = 'Beijing'
-    const location = { latitude: 39.9042, longitude: 116.4074 }
+    const title = 'Paris';
+    const location = { latitude: 48.8566, longitude: 2.3522 };
     addHoliday(testUser, title, location).then((res) => {
       console.log(res)
     });
@@ -42,7 +42,9 @@ export default BeHolidaysTest = () => {
   }
 
   const delHol = async (holId) => {
-    await removeHoliday(testUser, holId)
+    await removeHoliday(testUser, holId).then((res) => {
+      console.log(res)
+    })
     setHolAdded(true)
   }
 

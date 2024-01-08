@@ -11,8 +11,8 @@ export default BackendTest = () => {
         
         <View style={styles.page}>
             {/* <BeUsersTest /> */}
-            <BeHolidaysTest />
-            {/* <BeMemoriesTest /> */}
+            {/* <BeHolidaysTest /> */}
+            <BeMemoriesTest />
             {/* <UtilTests /> */}
         </View>
       );

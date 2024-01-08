@@ -45,7 +45,7 @@ export const createAccount = async (email, pass, username) => {
       return {msg: `username: ${username} is already in use`};
     }
   } else {
-    return {msg: `${auth.currentUser.displayName} is logged in`};
+    return {msg: `'${auth.currentUser.displayName}' is logged in.`};
   }
 };
 
@@ -58,7 +58,7 @@ export const logIn = async (email, pass) => {
       return err;
     }
   } else {
-    return {msg: `${auth.currentUser.displayName} is logged in`};
+    return {msg: `'${auth.currentUser.displayName}' is logged in.`};
   }
 };
 
@@ -70,7 +70,7 @@ export const removeUser = async () => {
     const userID = await getUserByName(auth.currentUser.displayName);
     await deleteUser(user);
     await deleteUserDoc(userID.id);
-    return {msg: `${user.displayName} deleted`};
+    return {msg: `'${user.displayName}' deleted.`};
   } catch (err) {
     return err;
   }
@@ -82,5 +82,5 @@ export const signedInUser = async (bool) => {
     else return false
   } else if (auth?.currentUser) {
     return auth?.currentUser
-  } else return {msg: 'No current user'}
+  } else return {msg: 'No current user.'}
 }

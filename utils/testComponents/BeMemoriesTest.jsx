@@ -8,13 +8,13 @@ export default BeMemoriesTest = () => {
     const [change, setChange] = useState(false);
 
     const userId = 'RKeEweJmC96pOoZEmzQn'
-    const holidayId = 'n0nzH7o7Y05e86nUwA8A'
+    const holidayId = 'Jp3WIuvAXSp0SjwmSICp'
 
     useEffect(() => {
         memoriesByHoliday(userId, holidayId).then((res) => {
             setMemories(res);
         });
-        // memoryById(userId, holidayId, 'OfrPbbsseZYWPTXyiSY7').then((res) => {
+        // memoryById(userId, holidayId, 'd3N49z4oiKNskA93PE9Y').then((res) => {
         //     console.log(res)
         // })
         setChange(false)
@@ -26,19 +26,27 @@ export default BeMemoriesTest = () => {
       }
 
     const newMemory = () => {
-        const title = 'Checkpoint Charlie';
-        const locationData = { latitude: 52.5075, longitude: 13.3904 };
-        addMemory(userId, holidayId, title, locationData)
+        const title = 'Shibuya Crossing';
+        const locationData = { latitude: 35.6614, longitude: 139.7041 };
+        addMemory(userId, holidayId, title, locationData).then((res) => {
+            console.log(res)
+        })
         setChange(true)
     }
 
     const changeMem = async (memoryId) => {
-        await editMemory(userId, holidayId, memoryId, 'note', 'Its lovely')
+        const field = 'date'
+        const data = '2021-01-05T12:30:45.678Z'
+        await editMemory(userId, holidayId, memoryId, field, data).then((res) => {
+            console.log(res)
+        })
         setChange(true)
     }
 
     const delMem = async (memoryId) => {
-        await removeMemory(userId, holidayId, memoryId)
+        await removeMemory(userId, holidayId, memoryId).then((res) => {
+            console.log(res)
+        })
         setChange(true)
     }
 
@@ -48,7 +56,7 @@ export default BeMemoriesTest = () => {
                 return (
                 <View>
                     <Text>{memory.title} - {dateChanger(memory.date)} - {memory.note ? memory.note : 'noinfo'}</Text>
-                    {/* {console.log(memory.locationData.latitude)} */}
+                    <Text>{memory.locationData.latitude} - {memory.locationData.longitude}</Text>
                     <Button onPress={() => changeMem(memory.id)} title="change memory"></Button>
                     <Button onPress={() => delMem(memory.id)} title="delete memory"></Button>
                 </View>

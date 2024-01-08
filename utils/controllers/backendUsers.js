@@ -53,7 +53,7 @@ export const patchUser = async (userId, field, input) => {
     }
   } else if (field === 'username') {
     const existingUser = await getUserByName(input)
-    if (existingUser) return {msg: `Username ${input} is not available`}
+    if (existingUser) return {msg: `Username '${input}' is not available.`}
     else {
       try {
         await updateProfile(auth?.currentUser, { displayName: input });
@@ -63,7 +63,7 @@ export const patchUser = async (userId, field, input) => {
       }
     }
   } else {
-    return {msg: `${field} is not a valid field for a user collection`}
+    return {msg: `'${field}' is not a valid field for a user collection.`}
   }
 };
 
