@@ -44,8 +44,8 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
         {
           key: "allHolidays",
           title: "My Holidays",
-          focusedIcon: "airplane",
-          unfocusedIcon: "account-outline",
+          focusedIcon: "bag-suitcase",
+          unfocusedIcon: "bag-suitcase-outline",
         },
         {
           key: "profile",

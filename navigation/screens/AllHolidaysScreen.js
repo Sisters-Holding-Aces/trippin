@@ -32,12 +32,14 @@ export default function AllHolidaysScreen({ user }) {
   const [allMemories, setAllMemories] = useState([]);
 
   useEffect(() => {
-    getUserInfo(user.displayName).then((res) => {
-      setUserId(res.id);
-      holidaysByUser(res.id).then((res) => {
-        setAllHolidays(res);
+    if (user) {
+      getUserInfo(user.displayName).then((res) => {
+        setUserId(res.id);
+        holidaysByUser(res.id).then((res) => {
+          setAllHolidays(res);
+        });
       });
-    });
+    }
   }, [user]);
 
   useEffect(() => {
@@ -200,7 +202,10 @@ export default function AllHolidaysScreen({ user }) {
             contentContainerStyle={{ backgroundColor: "white", padding: 20 }}
           >
             <Card>
-              <Card.Title title={selectedHoliday.title} titleVariant="titleLarge"/>
+              <Card.Title
+                title={selectedHoliday.title}
+                titleVariant="titleLarge"
+              />
               {allMemories.length === 0 ? (
                 <Card.Content>
                   <Text variant="bodyMedium">no memory yet...</Text>
