@@ -30,6 +30,7 @@ export default function App() {
   }, [userloggedin]);
 
   return (
+    
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <MainContainer user={user} setUser={setUser} setUserloggedin={setUserloggedin} />
