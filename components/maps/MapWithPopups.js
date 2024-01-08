@@ -1,10 +1,11 @@
 import { StyleSheet, View } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import markerHoliday from "../../assets/marker-holiday.png";
 import markerMemory from "../../assets/marker-memory.png";
 import Mapbox from "@rnmapbox/maps";
 import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
+import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/maps/geojson";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
@@ -19,70 +20,13 @@ const MapWithPopups = ({ holidays }) => {
 
   const [coordinates] = useState(holidays[0].locationData);
 
-  const [holidayFeatureCollection, setHolidayFeatureCollection] = useState({
-    type: "FeatureCollection",
-    features: [
-      ...holidays.map((holiday) => {
-        return {
-          type: "Feature",
-          id: `holiday-${holiday.id}`,
-          properties: {
-            popupType: "holiday",
-            id: holiday.id,
-            description: holiday.info,
-          },
-          geometry: {
-            type: "Point",
-            coordinates: holiday.locationData,
-          },
-        };
-      }),
-    ],
-  });
+  const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
-  const [memoryFeatureCollection, setMemoryFeatureCollection] = useState({});
-
-  const getMemoryFeatures = (holidays) => {
-    const memoryFeatures = [];
-    holidays.forEach((holiday) => {
-      holiday.memories.forEach((memory) => {
-        const memoryGeoJson = {
-          type: "Feature",
-          id: `memory-${memory.id}`,
-          properties: {
-            popupType: "memory",
-            id: memory.id,
-            title: memory.title,
-            description: memory.info,
-          },
-          geometry: {
-            type: "Point",
-            coordinates: memory.locationData,
-          },
-        };
-
-        memoryFeatures.push(memoryGeoJson);
-      });
-    });
-
-    return memoryFeatures;
-  };
-
-  useEffect(() => {
-    const memoriesGeoJson = {
-      type: "FeatureCollection",
-      features: getMemoryFeatures(holidays),
-    };
-
-    setMemoryFeatureCollection(memoriesGeoJson);
-  }, []);
+  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(holidays), [holidays]);
 
   const onPinPress = (e) => {
-    console.log("Pin PRESSED!!");
-    console.log(e);
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
-    console.log("feature properties: ", feature.properties);
 
     if (popupType === "holiday") {
       if (selectedHoliday === id) {
