@@ -7,8 +7,10 @@ import {
   Dialog,
   Portal,
   PaperProvider,
+  TextInput,
 } from "react-native-paper";
 import {
+  editHoliday,
   getUserInfo,
   holidaysByUser,
   removeHoliday,
@@ -16,9 +18,13 @@ import {
 
 export default function AllHolidaysScreen({ user }) {
   const [allHolidays, setAllHolidays] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [deleteBoxVisible, setDeleteBoxVisible] = useState(false);
+  const [editBoxVisible, setEditBoxVisible] = useState(false);
   const [userId, setUserId] = useState("");
   const [holidayToBeDelete, setHolidayToBeDelete] = useState("");
+  const [holidayToBeEdit, setHolidayToBeEdit] = useState("");
+  const [newHolidayTitle, setNewHolidayTitle] = useState("");
+  const [newHolidayInfo, setNewHolidayInfo] = useState("");
 
   useEffect(() => {
     getUserInfo(user.displayName).then((res) => {
@@ -28,6 +34,11 @@ export default function AllHolidaysScreen({ user }) {
       });
     });
   }, [user]);
+
+  useEffect(() => {
+    setNewHolidayTitle(holidayToBeEdit.title);
+    setNewHolidayInfo(holidayToBeEdit.info);
+  }, [holidayToBeEdit]);
 
   return (
     <PaperProvider>
@@ -43,10 +54,17 @@ export default function AllHolidaysScreen({ user }) {
                 ) : null}
               </Card.Content>
               <Card.Actions>
-                <Button>Edit</Button>
                 <Button
                   onPress={() => {
-                    setVisible(true);
+                    setEditBoxVisible(true);
+                    setHolidayToBeEdit(holiday);
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  onPress={() => {
+                    setDeleteBoxVisible(true);
                     setHolidayToBeDelete(holiday.id);
                   }}
                 >
@@ -58,9 +76,9 @@ export default function AllHolidaysScreen({ user }) {
         })}
         <Portal>
           <Dialog
-            visible={visible}
+            visible={deleteBoxVisible}
             onDismiss={() => {
-              setVisible(false);
+              setDeleteBoxVisible(false);
             }}
           >
             <Dialog.Title>Alert</Dialog.Title>
@@ -73,12 +91,12 @@ export default function AllHolidaysScreen({ user }) {
             <Dialog.Actions>
               <Button
                 onPress={() => {
-                  removeHoliday(userId, holidayToBeDelete).then(()=>{
+                  removeHoliday(userId, holidayToBeDelete).then(() => {
                     holidaysByUser(userId).then((res) => {
-                        setAllHolidays(res);
-                      });
-                  })
-                  setVisible(false);
+                      setAllHolidays(res);
+                    });
+                  });
+                  setDeleteBoxVisible(false);
                   setHolidayToBeDelete("");
                 }}
               >
@@ -86,7 +104,63 @@ export default function AllHolidaysScreen({ user }) {
               </Button>
               <Button
                 onPress={() => {
-                  setVisible(false);
+                  setDeleteBoxVisible(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+          <Dialog
+            visible={editBoxVisible}
+            onDismiss={() => {
+              setEditBoxVisible(false);
+            }}
+          >
+            <Dialog.Title>Edit</Dialog.Title>
+            <Dialog.Content>
+              <TextInput
+                label="Title"
+                value={newHolidayTitle}
+                onChangeText={(text) => setNewHolidayTitle(text)}
+              />
+              <TextInput
+                label="Info"
+                value={newHolidayInfo}
+                onChangeText={(text) => setNewHolidayInfo(text)}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button
+                onPress={() => {
+                  const promise1 = editHoliday(
+                    userId,
+                    holidayToBeEdit.id,
+                    "title",
+                    newHolidayTitle
+                  );
+                  const promise2 = editHoliday(
+                    userId,
+                    holidayToBeEdit.id,
+                    "info",
+                    newHolidayInfo
+                  );
+
+                  Promise.all([promise1, promise2]).then(() => {
+                    holidaysByUser(userId).then((res) => {
+                      setAllHolidays(res);
+                    });
+                  });
+                  setEditBoxVisible(false);
+                  setHolidayToBeEdit("");
+                }}
+              >
+                Submit
+              </Button>
+              <Button
+                onPress={() => {
+                  setEditBoxVisible(false);
+                  setHolidayToBeEdit("");
                 }}
               >
                 Cancel
