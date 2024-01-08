@@ -41,3 +41,15 @@ export const dateValidator = async (input) => {
         return true
     } else return false
 }
+
+export const randomCode = () => {
+    let code = '';
+    const alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    const codeLength = 12;
+  
+    for (let i = 0; i < codeLength; i++) {
+      code += alpha.charAt(Math.floor(Math.random() * alpha.length));
+    }
+  
+    return code;
+  };
