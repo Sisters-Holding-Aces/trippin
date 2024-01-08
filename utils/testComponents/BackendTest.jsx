@@ -4,14 +4,16 @@ import { auth } from "../../firebaseconfig";
 import BeHolidaysTest from "./BeHolidaysTest";
 import BeUsersTest from "./BeUsersTest";
 import BeMemoriesTest from "./BeMemoriesTest";
+import UtilTests from "./UtilTests";
 
 export default BackendTest = () => {
     return (
         
         <View style={styles.page}>
-            <BeUsersTest />
+            {/* <BeUsersTest /> */}
             {/* <BeHolidaysTest /> */}
-            {/* <BeMemoriesTest /> */}
+            <BeMemoriesTest />
+            {/* <UtilTests /> */}
         </View>
       );
 }

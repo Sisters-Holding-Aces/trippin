@@ -16,15 +16,15 @@ export default BeUsersTest = () => {
   const [userInfo, setUserInfo] = useState({});
   const [logInOut, setLogInOut] = useState(false);
 
-  const testEmail = "ex07@test.com"
+  const testUsername = "example01"
+  const testEmail = `${testUsername}@test.com`
   const testPass = "pass123"
-  const testUsername = "ex07"
 
   useEffect(() => {
     const setUser = async () => {
-      const userChecker = userCheck('bool')
+      const userChecker = await userCheck('bool')
       if (userChecker) {
-        const userData = userCheck()
+        const userData = await userCheck()
         const userDocData = await getUserInfo(userData.displayName)
         setUserInfo(userDocData)
       } else {
@@ -67,26 +67,19 @@ export default BeUsersTest = () => {
     });
   };
 
-  const userInfoFunc = () => {
-    if (userInfo?.username) {
-      return (
-        <View>
-          <Text>
-            - {userInfo.username} -
-            - {userInfo.email} -
-            - {userInfo.bio} -
-          </Text>
-        </View>
-      )
-    }
-  }
-
   return (
     <View>
       <Text>BE working...</Text>
       <Button onPress={signUp} title="newUser"></Button>
       <Button onPress={signIn} title="login"></Button>
-      <Text>{userInfoFunc()}</Text>
+      <Text>{userInfo?.username ? 
+            <Text>
+              - {userInfo.username} -
+              - {userInfo.email} -
+              - {userInfo.bio} -
+            </Text> : 
+            <Text>No user</Text>
+      }</Text>
       <Button onPress={signOut} title="logOut"></Button>
       <Button onPress={userUpdater} title="update user"></Button>
       <Button onPress={deleteAccount2} title="delete"></Button>

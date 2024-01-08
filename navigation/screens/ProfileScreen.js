@@ -25,7 +25,6 @@ export default function ProfileScreen({ user, setUser, setUserloggedin }) {
         </View>
       ) : (
         <Login
-        setUser={setUser}
         setUserloggedin={setUserloggedin}/>
       )}
     </>

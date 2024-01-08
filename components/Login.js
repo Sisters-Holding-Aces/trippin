@@ -8,7 +8,7 @@ import {
   userLogOut,
 } from "../utils/backendView";
 
-export default function Login({ setUser, setUserloggedin }) {
+export default function Login({ setUserloggedin }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,7 +59,6 @@ export default function Login({ setUser, setUserloggedin }) {
         <Button
           onPress={() => {
             createUser(email, password, username).then(() => {
-              setUser(userCheck());
               setUserloggedin(true);
             });
           }}
@@ -70,7 +69,6 @@ export default function Login({ setUser, setUserloggedin }) {
         <Button
           onPress={() => {
             userLogIn(email, password).then(() => {
-              setUser(userCheck());
               setUserloggedin(true);
             });
           }}

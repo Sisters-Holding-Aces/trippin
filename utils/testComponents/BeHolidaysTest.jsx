@@ -7,7 +7,7 @@ export default BeHolidaysTest = () => {
   const [hols, setHols] = useState([]);
   const [holAdded, setHolAdded] = useState(false);
 
-  const testUser = "JqijYB2RTXwLKi3bSWXX"
+  const testUser = "TxiSR8vZCwWwln2WdENh"
 
   useEffect(() => {
     holidaysByUser(testUser).then((res) => {
@@ -20,7 +20,11 @@ export default BeHolidaysTest = () => {
   }, [holAdded]);
 
   const createHol = () => {
-    addHoliday(testUser, 'Cape Town', { latitude: -33.9258, longitude: 18.4232 });
+    const title = 'Paris';
+    const location = { latitude: 48.8566, longitude: 2.3522 };
+    addHoliday(testUser, title, location).then((res) => {
+      console.log(res)
+    });
     setHolAdded(true)
   };
 
@@ -30,12 +34,17 @@ export default BeHolidaysTest = () => {
   }
 
   const changeHol = async (holId) => {
-    await editHoliday(testUser, holId, 'info', 'Went Cape Town :)')
+    const testInput = "2021-01-05T12:30:45.678Z"
+    await editHoliday(testUser, holId, 'info', 'date works2').then((res) => {
+      console.log(res)
+    })
     setHolAdded(true)
   }
 
   const delHol = async (holId) => {
-    await removeHoliday(testUser, holId)
+    await removeHoliday(testUser, holId).then((res) => {
+      console.log(res)
+    })
     setHolAdded(true)
   }
 
@@ -47,8 +56,9 @@ export default BeHolidaysTest = () => {
         return (
           <View>
             <Text>{hol.title} - {dateChanger(hol.startDate)}</Text>
+            {/* <Text>{dateChanger(hol.startDate)}</Text> */}
             <Text>{hol.info ? hol.info : 'noinfo'}</Text>
-            {/* {console.log(hol.locationData.latitude)} */}
+            {/* <Text>{hol.locationData.latitude}-{hol.locationData.longitude}</Text> */}
             <Button onPress={() => changeHol(hol.id)} title="change holiday"></Button>
             <Button onPress={() => delHol(hol.id)} title="delete holiday"></Button>
           </View>
