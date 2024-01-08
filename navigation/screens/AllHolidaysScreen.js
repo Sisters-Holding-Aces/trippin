@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {
   Button,
   Card,
@@ -70,7 +70,7 @@ export default function AllHolidaysScreen({ user }) {
 
   return (
     <PaperProvider>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Card.Title title="All holidays" titleVariant="titleLarge" />
         {allHolidays.map((holiday) => {
           return (
@@ -212,8 +212,9 @@ export default function AllHolidaysScreen({ user }) {
               setAllMemoriesVisible(false);
               setSelectedHoliday("");
             }}
-            contentContainerStyle={{ backgroundColor: "white", padding: 20 }}
+            contentContainerStyle={{ backgroundColor: "white", padding: 10 , marginTop:30, marginBottom:50}}
           >
+            <ScrollView>
             <Card.Title
               title={selectedHoliday.title}
               titleVariant="titleLarge"
@@ -256,6 +257,7 @@ export default function AllHolidaysScreen({ user }) {
                 );
               })
             )}
+            </ScrollView>
           </Modal>
           <Dialog
             visible={memoryDeleteBoxVisible}
@@ -363,7 +365,7 @@ export default function AllHolidaysScreen({ user }) {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-      </View>
+      </ScrollView>
     </PaperProvider>
   );
 }
