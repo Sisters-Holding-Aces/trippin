@@ -6,6 +6,7 @@ import markerMemory from "../../assets/marker-memory.png";
 import Mapbox, { FillLayer, Images, LineLayer, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
 import { Button, Card, IconButton, Text } from "react-native-paper";
 import HolidayPopup from "./HolidayPopup";
+import MemoryPopup from "./MemoryPopup";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
@@ -15,6 +16,8 @@ Mapbox.setAccessToken(
 const MapWithPopups = ({ holidays }) => {
   const [location, setLocation] = useState({ longitude: -5, latitude: 55 });
   const [selectedHoliday, setSelectedHoliday] = useState(null);
+  const [selectedMemory, setSelectedMemory] = useState(null);
+  console.log("selected memory:", selectedMemory);
 
   const mapView = useRef(null);
 
@@ -67,6 +70,8 @@ const MapWithPopups = ({ holidays }) => {
           id: `memory-${memory.id}`,
           properties: {
             popupType: "memory",
+            id: memory.id,
+            title: memory.title,
             description: memory.info,
           },
           geometry: {
@@ -96,6 +101,7 @@ const MapWithPopups = ({ holidays }) => {
     console.log(e);
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
+    console.log("feature properties: ", feature.properties);
 
     if (popupType === "holiday") {
       if (selectedHoliday === id) {
@@ -103,7 +109,33 @@ const MapWithPopups = ({ holidays }) => {
       } else {
         setSelectedHoliday(id);
       }
+    } else if (popupType === "memory") {
+      if (selectedMemory === id) {
+        setSelectedMemory(null);
+      } else {
+        setSelectedMemory(id);
+      }
     }
+  };
+
+  const renderMemoryPopups = () => {
+    const memoryPopups = [];
+
+    holidays.forEach((holiday) => {
+      holiday.memories.forEach((memory) => {
+        memoryPopups.push(
+          <MemoryPopup
+            key={`memoryPopup-${holiday.id}-${memory.id}`}
+            memory={memory}
+            isSelected={selectedMemory === memory.id ? true : false}
+            setSelectedMemory={setSelectedMemory}
+          />
+        );
+      });
+    });
+
+    // console.log("memory popups:", memoryPopups);
+    return memoryPopups;
   };
 
   return (
@@ -115,6 +147,7 @@ const MapWithPopups = ({ holidays }) => {
 
         <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
           <Mapbox.SymbolLayer id="memoryPinsLayer" style={customStyles.memoryPinsLayer} minZoomLevel={8} />
+          {renderMemoryPopups()}
         </Mapbox.ShapeSource>
 
         <Mapbox.ShapeSource id="holidayPinsSource" shape={holidayFeatureCollection} onPress={onPinPress}>
