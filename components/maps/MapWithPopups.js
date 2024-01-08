@@ -6,6 +6,7 @@ import Mapbox from "@rnmapbox/maps";
 import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
 import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/maps/geojson";
+import ActionSheet from "../BottomSheet";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
@@ -94,6 +95,7 @@ const MapWithPopups = ({ holidays }) => {
           {renderHolidayPopups()}
         </Mapbox.ShapeSource>
       </Mapbox.MapView>
+      <ActionSheet/>
     </View>
   );
 };
