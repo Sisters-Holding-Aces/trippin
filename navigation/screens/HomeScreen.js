@@ -1,9 +1,19 @@
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 // import Header from "../../components/Header";
 import CustomMapView from "../../components/CustomMapView";
 import MapWithPopups from "../../components/maps/MapWithPopups";
+import { ToggleButton } from "react-native-paper";
+import { useState } from "react";
 
 export default function HomeScreen() {
+  const [status, setStatus] = useState(false);
+
+  const onButtonToggle = (value) => {
+    setStatus(status === "checked" ? "unchecked" : "checked");
+  };
+
+  // console.log(status);
+
   const testData = [
     {
       title: "Berlin",
@@ -56,10 +66,32 @@ export default function HomeScreen() {
   return (
     <>
       {/* <Header /> */}
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        {/* <Text>Home Screen</Text> */}
+      <View style={styles.container}>
+        <ToggleButton
+          style={styles.IconButton}
+          size={40}
+          icon="earth-plus"
+          iconColor="blue"
+          value="add-trip"
+          status={status}
+          onPress={onButtonToggle}
+        />
         <MapWithPopups holidays={testData} />
       </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    flex: 1,
+  },
+  IconButton: {
+    alignSelf: "flex-end",
+    position: "absolute",
+    bottom: "5%",
+    right: "10%",
+    zIndex: 1,
+  },
+});
