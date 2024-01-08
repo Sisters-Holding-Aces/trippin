@@ -1,7 +1,5 @@
 import Mapbox from "@rnmapbox/maps";
-import { useState } from "react";
 import { Button, Card, IconButton, Text } from "react-native-paper";
-import { View } from "react-native";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
