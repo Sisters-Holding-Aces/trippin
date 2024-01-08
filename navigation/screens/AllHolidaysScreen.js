@@ -8,11 +8,13 @@ import {
   Portal,
   PaperProvider,
   TextInput,
+  Modal,
 } from "react-native-paper";
 import {
   editHoliday,
   getUserInfo,
   holidaysByUser,
+  memoriesByHoliday,
   removeHoliday,
 } from "../../utils/backendView";
 
@@ -25,6 +27,9 @@ export default function AllHolidaysScreen({ user }) {
   const [holidayToBeEdit, setHolidayToBeEdit] = useState("");
   const [newHolidayTitle, setNewHolidayTitle] = useState("");
   const [newHolidayInfo, setNewHolidayInfo] = useState("");
+  const [allMemoriesVisible, setAllMemoriesVisible] = useState(false);
+  const [selectedHoliday, setSelectedHoliday] = useState(false);
+  const [allMemories, setAllMemories] = useState([]);
 
   useEffect(() => {
     getUserInfo(user.displayName).then((res) => {
@@ -39,6 +44,14 @@ export default function AllHolidaysScreen({ user }) {
     setNewHolidayTitle(holidayToBeEdit.title);
     setNewHolidayInfo(holidayToBeEdit.info);
   }, [holidayToBeEdit]);
+
+  useEffect(() => {
+    memoriesByHoliday(userId, selectedHoliday.id)
+      .then((res) => {
+        setAllMemories(res);
+      })
+      .catch(() => {});
+  }, [selectedHoliday]);
 
   return (
     <PaperProvider>
@@ -55,6 +68,17 @@ export default function AllHolidaysScreen({ user }) {
               </Card.Content>
               <Card.Actions>
                 <Button
+                  mode="outlined"
+                  onPress={() => {
+                    setAllMemoriesVisible(true);
+                    setSelectedHoliday(holiday);
+                  }}
+                >
+                  See memories
+                </Button>
+
+                <Button
+                  mode="contained-tonal"
                   onPress={() => {
                     setEditBoxVisible(true);
                     setHolidayToBeEdit(holiday);
@@ -167,6 +191,38 @@ export default function AllHolidaysScreen({ user }) {
               </Button>
             </Dialog.Actions>
           </Dialog>
+          <Modal
+            visible={allMemoriesVisible}
+            onDismiss={() => {
+              setAllMemoriesVisible(false);
+              setSelectedHoliday("");
+            }}
+            contentContainerStyle={{ backgroundColor: "white", padding: 20 }}
+          >
+            <Card>
+              <Card.Title title={selectedHoliday.title} titleVariant="titleLarge"/>
+              {allMemories.length === 0 ? (
+                <Card.Content>
+                  <Text variant="bodyMedium">no memory yet...</Text>
+                </Card.Content>
+              ) : (
+                allMemories.map((memory) => {
+                  return (
+                    <>
+                      <Card.Content>
+                        <Text variant="titleMedium">{memory.title}</Text>
+                        <Text variant="bodyMedium">{memory.note}</Text>
+                      </Card.Content>
+                      <Card.Actions>
+                        <Button>Cancel</Button>
+                        <Button>Ok</Button>
+                      </Card.Actions>
+                    </>
+                  );
+                })
+              )}
+            </Card>
+          </Modal>
         </Portal>
       </View>
     </PaperProvider>
