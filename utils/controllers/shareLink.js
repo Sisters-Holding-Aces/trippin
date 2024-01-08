@@ -1,0 +1,61 @@
+import { collectionGroup, doc, getDoc, getDocs, query, updateDoc, where } from "@firebase/firestore";
+import { db } from "../../firebaseconfig";
+import { randomCode } from "./controllerUtils";
+
+export const createShareLink = async (userId, holidayId) => {
+    const docRef = doc(db, "users", userId, "holidays", holidayId);
+    
+    try {
+        const theDoc = await getDoc(docRef)
+        if (theDoc.data().shareLink) {
+            return {msg: `'${theDoc.data().title}' already has a share link, it is '${theDoc.data().shareLink}'.`}
+        } else {
+            const shareCode = randomCode()
+            const data = {shareLink: shareCode}
+        
+            try {
+                await updateDoc(docRef, data);
+                const newDoc = await getDoc(docRef)
+                return newDoc.data()
+            } catch (err) {
+                return err
+            }
+        }
+        
+    } catch (err) {
+        return err
+    }
+    
+}
+
+export const deleteShareLink = async (userId, holidayId) => {
+    const docRef = doc(db, "users", userId, "holidays", holidayId);
+    try {
+        const theDoc = await getDoc(docRef)
+        if (theDoc.data().shareLink) {
+            await updateDoc(docRef, {shareLink: ''});
+        } else {
+            return {msg: `'${theDoc.data().title}' does not have a share link.`}
+        }
+    } catch (err) {
+        return err
+    }
+}
+
+export const getSharedLink = async (link) => {
+    const allLinks = collectionGroup(db, 'holidays') 
+    
+    try {
+        const { docs } = await getDocs(allLinks)
+        const mappedDocs = docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+        }));
+        
+        const filteredDocs = mappedDocs.filter((doc) => doc.shareLink === link)
+        if (filteredDocs.length === 1) return filteredDocs[0]
+        else return {msg: 'Invalid link.'}
+    } catch (err) {
+        return err
+    }
+}

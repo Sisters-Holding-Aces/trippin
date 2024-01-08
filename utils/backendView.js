@@ -14,13 +14,14 @@ import {
 } from "./controllers/backendHolidays";
 import { deleteMemory, getMemories, getMemory, patchMemory, postMemory } from "./controllers/backendMemories";
 import { getUserByName, getUsers, patchUser } from "./controllers/backendUsers";
+import { createShareLink, deleteShareLink, getSharedLink } from "./controllers/shareLink";
 
 // user authentication
 export const createUser = async (email, pass, username) => await createAccount(email, pass, username);
 export const userLogIn = async (email, pass) => await logIn(email, pass);
 export const userLogOut = async () => await logOut();
 export const deleteAccount = async () => await removeUser();
-export const userCheck = async(bool) => await signedInUser(bool)
+export const userCheck = async (bool) => await signedInUser(bool)
 
 // users collection
 export const allUsers = async () => await getUsers();
@@ -40,3 +41,9 @@ export const memoryById = async (userId, holidayId, memoryId) => await getMemory
 export const addMemory = async (userId, holidayId, title, location) => await postMemory(userId, holidayId, title, location);
 export const editMemory = async (userId, holidayId, memoryId, field, input) => await patchMemory(userId, holidayId, memoryId, field, input);
 export const removeMemory = async (userId, holidayId, memoryId) => await deleteMemory(userId, holidayId, memoryId);
+
+// share holidays
+export const addLinkToHoliday = async (userId, holidayId) => await createShareLink(userId, holidayId);
+export const removeLinkFromHoliday = async (userId, holidayId) => await deleteShareLink(userId, holidayId);
+export const useLinkToHoliday = async (link) => await getSharedLink(link);
+

@@ -3,7 +3,7 @@ import { BottomNavigation, Text } from "react-native-paper";
 
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import HolidaysScreen from "./screens/HolidaysScreen";
+import AllHolidaysScreen from "./screens/AllHolidaysScreen";
 
 export default function MainContainer({ user, setUser, setUserLoggedIn }) {
   const HomeRoute = () => <HomeScreen />;
@@ -14,8 +14,8 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
       setUserLoggedIn={setUserLoggedIn}
     />
   );
-  const HolidaysRoute = () => <HolidaysScreen />;
-
+  const AllHolidaysRoute = () => <AllHolidaysScreen user={user} />;
+  
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([
     {
@@ -43,7 +43,7 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
         },
         {
           key: "holidays",
-          title: "My Trips",
+          title: "My Holidays",
           focusedIcon: "airplane",
           unfocusedIcon: "account-outline",
         },
@@ -76,7 +76,7 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute,
-    holidays: HolidaysRoute,
+    allHolidays: AllHolidaysRoute,
     profile: ProfileRoute,
   });
 
