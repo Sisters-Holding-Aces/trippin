@@ -12,18 +12,20 @@ Mapbox.setAccessToken(
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MapWithPopups = ({ holidays }) => {
+const MapWithPopups = ({ holidays, memories }) => {
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
-
   const mapView = useRef(null);
   const camera = useRef(null);
 
-  const [coordinates, setCoordinates] = useState(holidays[0].locationData);
+  const [coordinates, setCoordinates] = useState([
+    holidays[0].locationData.longitude,
+    holidays[0].locationData.latitude,
+  ]);
 
   const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
-  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(holidays), [holidays]);
+  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
 
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
@@ -50,22 +52,16 @@ const MapWithPopups = ({ holidays }) => {
   };
 
   const renderMemoryPopups = () => {
-    const memoryPopups = [];
-
-    holidays.forEach((holiday) => {
-      holiday.memories.forEach((memory) => {
-        memoryPopups.push(
-          <MemoryPopup
-            key={`memoryPopup-${holiday.id}-${memory.id}`}
-            memory={memory}
-            isSelected={selectedMemory === memory.id ? true : false}
-            setSelectedMemory={setSelectedMemory}
-          />
-        );
-      });
+    return memories.map((memory) => {
+      return (
+        <MemoryPopup
+          key={`memoryPopup-${memory.id}`}
+          memory={memory}
+          isSelected={selectedMemory === memory.id ? true : false}
+          setSelectedMemory={setSelectedMemory}
+        />
+      );
     });
-
-    return memoryPopups;
   };
 
   const renderHolidayPopups = () => {

@@ -11,17 +11,26 @@ const MemoryPopup = ({ memory, isSelected, setSelectedMemory }) => {
     setSelectedMemory(null);
   };
 
+  const renderDescription = () => {
+    if (memory.info) {
+      const excerpt = memory.info.split(" ").slice(0, 20);
+      return excerpt.join(" ") + (excerpt.length < 20 ? "" : "...");
+    }
+
+    return "no description 🏜️";
+  };
+
   return (
     <Mapbox.MarkerView // popup
-      key={`MarkerView-Popup-${memory.locationData.join("-")}`}
-      coordinate={memory.locationData}
+      key={`MarkerView-Popup-${memory.locationData.longitude}-${memory.locationData.latitude}`}
+      coordinate={[memory.locationData.longitude, memory.locationData.latitude]}
       anchor={{ x: 0.5, y: 0 }}
       allowOverlap={true}
     >
-      <Card style={{ display: isSelected ? "" : "none", margin: 0 }}>
+      <Card style={{ display: isSelected ? "" : "none", margin: 0, maxWidth: "60%" }}>
         <Card.Content>
           <Text variant="titleLarge">{memory.title}</Text>
-          <Text variant="bodyMedium">{memory.info}</Text>
+          <Text variant="bodyMedium">{renderDescription()}</Text>
         </Card.Content>
         <Card.Actions>
           <Button mode="text">See more</Button>

@@ -11,17 +11,26 @@ const HolidayPopup = ({ holiday, isSelected, setSelectedHoliday }) => {
     setSelectedHoliday(null);
   };
 
+  const renderDescription = () => {
+    if (holiday.info) {
+      const excerpt = holiday.info.split(" ").slice(0, 20);
+      return excerpt.join(" ") + (excerpt.length < 20 ? "" : "...");
+    }
+
+    return "no description 🏜️";
+  };
+
   return (
     <Mapbox.MarkerView // popup
-      key={`MarkerView-Popup-${holiday.locationData.join("-")}`}
-      coordinate={holiday.locationData}
+      key={`MarkerView-Popup-${holiday.locationData.longitude}-${holiday.locationData.latitude}`}
+      coordinate={[holiday.locationData.longitude, holiday.locationData.latitude]}
       anchor={{ x: 0.5, y: 0 }}
       allowOverlap={true}
     >
-      <Card style={{ display: isSelected ? "" : "none", margin: 0 }}>
+      <Card style={{ display: isSelected ? "" : "none", margin: 0, maxWidth: "60%" }}>
         <Card.Content>
           <Text variant="titleLarge">{holiday.title}</Text>
-          <Text variant="bodyMedium">{holiday.info}</Text>
+          <Text variant="bodyMedium">{renderDescription()}</Text>
         </Card.Content>
         <Card.Actions>
           <Button mode="text">See more</Button>
