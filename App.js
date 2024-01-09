@@ -6,7 +6,7 @@ import { registerRootComponent } from "expo";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import CustomMapView from "./components/CustomMapView";
-
+import Navigation from "./navigation/Navigation"
 import { userCheck } from "./utils/backendView";
 import BackendTest from "./utils/testComponents/BackendTest";
 
@@ -37,6 +37,7 @@ export default function App() {
             setUser={setUser}
             setUserLoggedIn={setUserLoggedIn}
           />
+          <Navigation />
         </PaperProvider>
       </SafeAreaView>
     </GestureHandlerRootView>
