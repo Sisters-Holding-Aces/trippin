@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import markerHoliday from "../../assets/marker-holiday.png";
 import markerMemory from "../../assets/marker-memory.png";
+import markerPlaneRound from "../../assets/marker-airplane-round.png";
 import Mapbox from "@rnmapbox/maps";
 import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
@@ -110,7 +111,13 @@ const MapWithPopups = ({ holidays, memories }) => {
       >
         <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} minZoomLevel={2} />
 
-        <Mapbox.Images images={{ markerHoliday, markerMemory }} />
+        <Mapbox.Images
+          images={{
+            markerHoliday,
+            markerMemory,
+            markerPlaneRound,
+          }}
+        />
 
         {/* memories layer */}
         <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
@@ -139,8 +146,8 @@ const customStyles = {
   holidayPinsLayer: {
     iconAllowOverlap: true,
     iconAnchor: "bottom",
-    iconSize: ["interpolate", ["linear"], ["zoom"], 0, 0.6, 3, 0.7, 5, 1],
-    iconImage: "markerHoliday",
+    iconSize: ["interpolate", ["linear"], ["zoom"], 0, 0.4, 3, 0.5, 5, 0.6],
+    iconImage: "markerPlaneRound",
   },
   memoryPinsLayer: {
     iconAllowOverlap: true,
