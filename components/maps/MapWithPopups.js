@@ -5,10 +5,7 @@ import markerMemory from "../../assets/marker-memory.png";
 import Mapbox from "@rnmapbox/maps";
 import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
-import {
-  holidaysGeoJsonFromData,
-  memoriesGeoJsonFromData,
-} from "../../utils/maps/geojson";
+import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/maps/geojson";
 import ActionSheet from "../BottomSheet";
 
 Mapbox.setAccessToken(
@@ -31,15 +28,9 @@ const MapWithPopups = ({ holidays, memories }) => {
     holidays[0].locationData.latitude,
   ]);
 
-  const holidayFeatureCollection = useMemo(
-    () => holidaysGeoJsonFromData(holidays),
-    [holidays]
-  );
+  const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
-  const memoryFeatureCollection = useMemo(
-    () => memoriesGeoJsonFromData(memories),
-    [memories]
-  );
+  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
 
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
@@ -95,9 +86,7 @@ const MapWithPopups = ({ holidays, memories }) => {
   };
 
   useEffect(() => {
-    setBottomSheet(
-      <ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />
-    );
+    setBottomSheet(<ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />);
   }, [moreInfo]);
 
   return (
@@ -119,39 +108,19 @@ const MapWithPopups = ({ holidays, memories }) => {
         projection="mercator"
         rotateEnabled={true}
       >
-        <Mapbox.Camera
-          centerCoordinate={coordinates}
-          animationDuration={700}
-          ref={camera}
-        />
+        <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} minZoomLevel={2} />
 
         <Mapbox.Images images={{ markerHoliday, markerMemory }} />
 
         {/* memories layer */}
-        <Mapbox.ShapeSource
-          id="memoryPinsSource"
-          shape={memoryFeatureCollection}
-          onPress={onPinPress}
-        >
-          <Mapbox.SymbolLayer
-            id="memoryPinsLayer"
-            style={customStyles.memoryPinsLayer}
-            minZoomLevel={8}
-          />
+        <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
+          <Mapbox.SymbolLayer id="memoryPinsLayer" style={customStyles.memoryPinsLayer} minZoomLevel={8} />
           {renderMemoryPopups()}
         </Mapbox.ShapeSource>
 
         {/* holidays layer: rendered above and after the memories layer */}
-        <Mapbox.ShapeSource
-          id="holidayPinsSource"
-          shape={holidayFeatureCollection}
-          onPress={onPinPress}
-        >
-          <Mapbox.SymbolLayer
-            id="holidayPinsLayer"
-            style={customStyles.holidayPinsLayer}
-            maxZoomLevel={8}
-          />
+        <Mapbox.ShapeSource id="holidayPinsSource" shape={holidayFeatureCollection} onPress={onPinPress}>
+          <Mapbox.SymbolLayer id="holidayPinsLayer" style={customStyles.holidayPinsLayer} maxZoomLevel={8} />
           {renderHolidayPopups()}
         </Mapbox.ShapeSource>
       </Mapbox.MapView>
@@ -170,7 +139,7 @@ const customStyles = {
   holidayPinsLayer: {
     iconAllowOverlap: true,
     iconAnchor: "bottom",
-    iconSize: 1.0,
+    iconSize: ["interpolate", ["linear"], ["zoom"], 0, 0.6, 3, 0.7, 5, 1],
     iconImage: "markerHoliday",
   },
   memoryPinsLayer: {
