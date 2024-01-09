@@ -37,8 +37,9 @@ const HolidayPopup = ({ holiday, isSelected, setSelectedHoliday, setMoreInfo }) 
       coordinate={[holiday.locationData.longitude, holiday.locationData.latitude]}
       anchor={{ x: 0.5, y: 0 }}
       allowOverlap={true}
+      style={{maxWidth: "60%"}}
     >
-      <Card style={{ display: isSelected ? "" : "none", margin: 0, maxWidth: "60%" }}>
+      <Card style={{ display: isSelected ? "" : "none", margin: 0}}>
         <Card.Content>
           <Text variant="titleLarge">{holiday.title}</Text>
           <Text variant="bodyMedium">{renderDescription()}</Text>
