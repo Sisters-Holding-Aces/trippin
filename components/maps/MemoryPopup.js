@@ -12,8 +12,8 @@ const MemoryPopup = ({ memory, isSelected, setSelectedMemory }) => {
   };
 
   const renderDescription = () => {
-    if (memory.info) {
-      const excerpt = memory.info.split(" ").slice(0, 20);
+    if (memory.note) {
+      const excerpt = memory.note.split(" ").slice(0, 20);
       return excerpt.join(" ") + (excerpt.length < 20 ? "" : "...");
     }
 
