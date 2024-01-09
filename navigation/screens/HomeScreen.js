@@ -4,6 +4,7 @@ import { getUserInfo, memoriesByHoliday } from "../../utils/backendView";
 import { useEffect, useState, useRef } from "react";
 import { getHolidays } from "../../utils/controllers/backendHolidays";
 import dummyData from "../../components/maps/dummyData";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 export default function HomeScreen({ user }) {
   const [holidays, setHolidays] = useState([]);
@@ -41,7 +42,11 @@ export default function HomeScreen({ user }) {
   return (
     <>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        {isLoading ? <Text>Loading...</Text> : <MapWithPopups holidays={holidays} memories={memories} />}
+        {isLoading ? (
+          <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
+        ) : (
+          <MapWithPopups holidays={holidays} memories={memories} />
+        )}
       </View>
     </>
   );
