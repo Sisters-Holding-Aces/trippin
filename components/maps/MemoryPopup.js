@@ -6,10 +6,16 @@ Mapbox.setAccessToken(
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MemoryPopup = ({ memory, isSelected, setSelectedMemory }) => {
+const MemoryPopup = ({ memory, isSelected, setSelectedMemory, setMoreInfo }) => {
+
   const hidePopup = () => {
     setSelectedMemory(null);
   };
+
+  const handleSeeMore = () => {
+    console.log("see more")
+    setMoreInfo(true)
+  }
 
   return (
     <Mapbox.MarkerView // popup
@@ -24,8 +30,9 @@ const MemoryPopup = ({ memory, isSelected, setSelectedMemory }) => {
           <Text variant="bodyMedium">{memory.info}</Text>
         </Card.Content>
         <Card.Actions>
-          <Button mode="text">See more</Button>
-          <IconButton icon="close-circle-outline" size={20} onPress={hidePopup} style={{ margin: 0 }} />
+
+          <Button onPressIn={()=>{handleSeeMore()}} mode="text">See more</Button>
+          <IconButton icon="close-circle-outline" size={20} onPressIn={hidePopup} style={{ margin: 0 }} />
         </Card.Actions>
       </Card>
     </Mapbox.MarkerView>

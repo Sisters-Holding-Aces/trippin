@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useMemo, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { TouchableOpacity } from "react-native";
+import { Button, Card, IconButton, Text } from "react-native-paper";
 
-const ActionSheet = () => {
+const ActionSheet = ({ setMoreInfo, sheetData}) => {
   const bottomSheetRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
 
@@ -10,11 +12,43 @@ const ActionSheet = () => {
 
   const handleSheetChanges = () => {};
 
+  const handleOpenSheet = () => {
+
+  }
+
+  const handleCloseSheet = () =>{
+    setIsOpen(false)
+    setMoreInfo(false)
+  }
+
+
   return (
     <>
-      <BottomSheet enablePanDownToClose ref={bottomSheetRef} index={1} snapPoints={snapPoints} onChange={handleSheetChanges} onClose={()=>{setIsOpen(false)}}>
+      <BottomSheet enablePanDownToClose ref={bottomSheetRef} index={1} snapPoints={snapPoints} onChange={handleSheetChanges} onClose={handleCloseSheet}>
         <BottomSheetView style={styles.contentContainer}>
-          <Text>Click on a pin to see more info!</Text>
+        <Card>
+        <Card.Content>
+          <Text variant="titleLarge"></Text>
+          <Text variant="bodyMedium"></Text>
+        </Card.Content>
+        <Card.Cover source={{ uri: 'https://www.germany.travel/media/redaktion/staedte_kultur_content/Berlin_Brandenburger_Tor_im_Sonnenuntergang_Leitmotiv_German_Summer_Cities.jpg' }} />
+        <Card.Actions>
+          <Button mode="text">Edit</Button>
+          <TouchableOpacity mode="text"><Text>Share</Text></TouchableOpacity>
+        </Card.Actions>
+      </Card>
+        <Card style={{width: "100%"}}>
+            <Card.Content>
+            <Text variant="titleLarge">Memory 1</Text>
+                  <Text variant="bodyMedium">Omg such a good memory</Text>
+            </Card.Content>
+        </Card>
+        <Card style={{width: "100%"}}>
+            <Card.Content>
+            <Text variant="titleLarge">Memory 1</Text>
+                  <Text variant="bodyMedium">Omg such a good memory</Text>
+            </Card.Content>
+        </Card>
         </BottomSheetView>
       </BottomSheet>
     </>
