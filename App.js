@@ -1,6 +1,7 @@
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { PaperProvider } from "react-native-paper";
 import MainContainer from "./navigation/MainContainer";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Platform, StatusBar } from "react-native";
 import { registerRootComponent } from "expo";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
@@ -29,11 +30,15 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <SafeAreaView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <MainContainer user={user} setUser={setUser} setUserLoggedIn={setUserLoggedIn} />
-      </SafeAreaProvider>
-    </SafeAreaView>
+      <SafeAreaView style={styles.AndroidSafeArea}>
+        <PaperProvider>
+          <MainContainer
+            user={user}
+            setUser={setUser}
+            setUserLoggedIn={setUserLoggedIn}
+          />
+        </PaperProvider>
+      </SafeAreaView>
     </GestureHandlerRootView>
     // <View style={styles.page}>
     //   <CustomMapView />
@@ -45,6 +50,10 @@ export default function App() {
 registerRootComponent(App);
 
 const styles = StyleSheet.create({
+  AndroidSafeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
   page: {
     flex: 1,
     justifyContent: "center",
