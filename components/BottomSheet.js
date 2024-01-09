@@ -43,7 +43,7 @@ const ActionSheet = ({ setMoreInfo, sheetData}) => {
           <Text variant="headlineLarge">{sheetData.title}</Text>
           <Text variant="bodyMedium"></Text>
         </Card.Content>
-        <Card.Cover source={{ uri: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fflight_562740&psig=AOvVaw1mZYUMBNgyO_6ihur-vw4g&ust=1704894549841000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLCTkqe50IMDFQAAAAAdAAAAABAJ' }} />
+        <Card.Cover source={{ uri: '/assets/airplane-icon-png-2506.png' }} />
         <Card.Actions>
           <Button mode="text">Edit</Button>
           <TouchableOpacity mode="text"><Text>Share</Text></TouchableOpacity>
