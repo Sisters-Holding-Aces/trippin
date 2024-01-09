@@ -69,7 +69,7 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
           unfocusedIcon: "account-outline",
         },
       ]);
-      setIndex(1);
+      setIndex(0);
     }
   }, [user]);
 

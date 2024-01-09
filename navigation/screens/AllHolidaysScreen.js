@@ -77,6 +77,7 @@ export default function AllHolidaysScreen({ user }) {
             <Card key={holiday.id}>
               <Card.Content>
                 <Text variant="titleMedium">{holiday.title}</Text>
+                <Text variant="bodyMedium">{holiday.startDate.toDate().toLocaleDateString()}</Text>
                 {holiday.info ? (
                   <Text variant="bodyMedium">{holiday.info}</Text>
                 ) : null}
@@ -231,6 +232,7 @@ export default function AllHolidaysScreen({ user }) {
                   <Card key={memory.id}>
                     <Card.Content>
                       <Text variant="titleMedium">{memory.title}</Text>
+                      <Text variant="bodyMedium">{memory.date.toDate().toLocaleDateString()}</Text>
                       <Text variant="bodyMedium">{memory.note}</Text>
                     </Card.Content>
                     <Card.Actions>
