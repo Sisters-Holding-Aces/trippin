@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Pressable } from "react-native";
 import {
   Button,
   Card,
@@ -11,12 +11,15 @@ import {
   Modal,
 } from "react-native-paper";
 import {
+  addLinkToHoliday,
   editHoliday,
   editMemory,
   getUserInfo,
+  holidayById,
   holidaysByUser,
   memoriesByHoliday,
   removeHoliday,
+  removeLinkFromHoliday,
   removeMemory,
 } from "../../utils/backendView";
 
@@ -38,6 +41,8 @@ export default function AllHolidaysScreen({ user }) {
   const [memoryToBeEdit, setMemoryToBeEdit] = useState("");
   const [newMemoryTitle, setNewMemoryTitle] = useState("");
   const [newMemoryNote, setNewMemoryNote] = useState("");
+  const [shareBoxVisible, setShareBoxVisible] = useState(false);
+  const [holidayToBeShare, setHolidayToBeShare] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -48,7 +53,7 @@ export default function AllHolidaysScreen({ user }) {
         });
       });
     }
-  }, [user]);
+  }, [user, holidayToBeShare]);
 
   useEffect(() => {
     setNewHolidayTitle(holidayToBeEdit.title);
@@ -77,22 +82,33 @@ export default function AllHolidaysScreen({ user }) {
             <Card key={holiday.id}>
               <Card.Content>
                 <Text variant="titleMedium">{holiday.title}</Text>
-                <Text variant="bodyMedium">{holiday.startDate.toDate().toLocaleDateString()}</Text>
+                <Text variant="bodyMedium">
+                  {holiday.startDate.toDate().toLocaleDateString()}
+                </Text>
                 {holiday.info ? (
                   <Text variant="bodyMedium">{holiday.info}</Text>
                 ) : null}
-              </Card.Content>
-              <Card.Actions>
-                <Button
-                  mode="outlined"
+                <Pressable
                   onPress={() => {
                     setAllMemoriesVisible(true);
                     setSelectedHoliday(holiday);
                   }}
                 >
-                  See memories
+                  <Text style={{ color: "darkslateblue", fontWeight: "bold" }}>
+                    See memories...
+                  </Text>
+                </Pressable>
+              </Card.Content>
+              <Card.Actions>
+                <Button
+                  mode="outlined"
+                  onPress={() => {
+                    setShareBoxVisible(true);
+                    setHolidayToBeShare(holiday);
+                  }}
+                >
+                  Share
                 </Button>
-
                 <Button
                   mode="contained-tonal"
                   onPress={() => {
@@ -213,52 +229,59 @@ export default function AllHolidaysScreen({ user }) {
               setAllMemoriesVisible(false);
               setSelectedHoliday("");
             }}
-            contentContainerStyle={{ backgroundColor: "white", padding: 10 , marginTop:30, marginBottom:50}}
+            contentContainerStyle={{
+              backgroundColor: "white",
+              padding: 10,
+              marginTop: 30,
+              marginBottom: 50,
+            }}
           >
             <ScrollView>
-            <Card.Title
-              title={selectedHoliday.title}
-              titleVariant="titleLarge"
-            />
-            {allMemories.length === 0 ? (
-              <Card>
-                <Card.Content>
-                  <Text variant="bodyMedium">no memory yet...</Text>
-                </Card.Content>
-              </Card>
-            ) : (
-              allMemories.map((memory) => {
-                return (
-                  <Card key={memory.id}>
-                    <Card.Content>
-                      <Text variant="titleMedium">{memory.title}</Text>
-                      <Text variant="bodyMedium">{memory.date.toDate().toLocaleDateString()}</Text>
-                      <Text variant="bodyMedium">{memory.note}</Text>
-                    </Card.Content>
-                    <Card.Actions>
-                      <Button
-                        onPress={() => {
-                          setMemoryToBeEdit(memory);
-                          setAllMemoriesVisible(false);
-                          setMemoryEditBoxVisible(true);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        onPress={() => {
-                          setMemoryToBeDelete(memory.id);
-                          setAllMemoriesVisible(false);
-                          setMemoryDeleteBoxVisible(true);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </Card.Actions>
-                  </Card>
-                );
-              })
-            )}
+              <Card.Title
+                title={selectedHoliday.title}
+                titleVariant="titleLarge"
+              />
+              {allMemories.length === 0 ? (
+                <Card>
+                  <Card.Content>
+                    <Text variant="bodyMedium">no memory yet...</Text>
+                  </Card.Content>
+                </Card>
+              ) : (
+                allMemories.map((memory) => {
+                  return (
+                    <Card key={memory.id}>
+                      <Card.Content>
+                        <Text variant="titleMedium">{memory.title}</Text>
+                        <Text variant="bodyMedium">
+                          {memory.date.toDate().toLocaleDateString()}
+                        </Text>
+                        <Text variant="bodyMedium">{memory.note}</Text>
+                      </Card.Content>
+                      <Card.Actions>
+                        <Button
+                          onPress={() => {
+                            setMemoryToBeEdit(memory);
+                            setAllMemoriesVisible(false);
+                            setMemoryEditBoxVisible(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          onPress={() => {
+                            setMemoryToBeDelete(memory.id);
+                            setAllMemoriesVisible(false);
+                            setMemoryDeleteBoxVisible(true);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </Card.Actions>
+                    </Card>
+                  );
+                })
+              )}
             </ScrollView>
           </Modal>
           <Dialog
@@ -365,6 +388,59 @@ export default function AllHolidaysScreen({ user }) {
                 Cancel
               </Button>
             </Dialog.Actions>
+          </Dialog>
+          <Dialog
+            visible={shareBoxVisible}
+            onDismiss={() => {
+              setShareBoxVisible(false);
+            }}
+          >
+            <Dialog.Title>Share it to your friends!</Dialog.Title>
+            <Dialog.Content>
+              {holidayToBeShare.shareLink ? (
+                <Text variant="bodyLarge">
+                  Link:{"\n"}
+                  {holidayToBeShare.shareLink}
+                </Text>
+              ) : (
+                <Pressable
+                  onPress={() => {
+                    addLinkToHoliday(userId, holidayToBeShare.id).then(
+                      (res) => {
+                        setHolidayToBeShare({
+                          ...res,
+                          id: holidayToBeShare.id,
+                        });
+                      }
+                    );
+                  }}
+                >
+                  <Text style={{ color: "darkslateblue" }} variant="bodyLarge">
+                    Create a link
+                  </Text>
+                </Pressable>
+              )}
+            </Dialog.Content>
+            {holidayToBeShare.shareLink ? (
+              <Dialog.Actions>
+                <Button
+                  onPress={() => {
+                    removeLinkFromHoliday(userId, holidayToBeShare.id).then(
+                      () => {
+                        holidayById(userId, holidayToBeShare.id).then((res) => {
+                          setHolidayToBeShare({
+                            ...res,
+                            id: holidayToBeShare.id,
+                          });
+                        });
+                      }
+                    );
+                  }}
+                >
+                  Deactivate link
+                </Button>
+              </Dialog.Actions>
+            ) : null}
           </Dialog>
         </Portal>
       </ScrollView>
