@@ -1,6 +1,6 @@
 import { Button, Text, View } from "react-native";
 import { useEffect, useState } from "react";
-import { addHoliday, addMemory, editHoliday, holidayById, holidaysByUser, removeHoliday } from "../backendView";
+import { removeLinkFromHoliday, addHoliday, useLinkToHoliday, addLinkToHoliday, addMemory, editHoliday, holidayById, holidaysByUser, removeHoliday } from "../backendView";
 import { timestampToDate } from "../utils";
 
 export default BeHolidaysTest = () => {
@@ -15,6 +15,9 @@ export default BeHolidaysTest = () => {
     });
     // holidayById(testUser, 'uNFhKPtp3HT3taCJJZRg').then((res) => {
     //     console.log(res)
+    // })
+    // useLinkToHoliday('e77wswfn0fN6').then((res) => {
+    //   console.log(res, '---')
     // })
     setHolAdded(false)
   }, [holAdded]);
@@ -48,6 +51,18 @@ export default BeHolidaysTest = () => {
     setHolAdded(true)
   }
 
+  const shareHol = async (holId) => {
+    await addLinkToHoliday(testUser, holId).then((res) => {
+      console.log(res)
+    })
+    setHolAdded(true)
+  }
+
+  const delShareLink = async (holId) => {
+    await removeLinkFromHoliday(testUser, holId).then((res) => {
+      console.log(res)
+    })
+  }
 
   return (
     <View>
@@ -58,9 +73,12 @@ export default BeHolidaysTest = () => {
             <Text>{hol.title} - {dateChanger(hol.startDate)}</Text>
             {/* <Text>{dateChanger(hol.startDate)}</Text> */}
             <Text>{hol.info ? hol.info : 'noinfo'}</Text>
+            <Text>{hol.shareLink ? hol.shareLink : 'noShareLink'}</Text>
             {/* <Text>{hol.locationData.latitude}-{hol.locationData.longitude}</Text> */}
-            <Button onPress={() => changeHol(hol.id)} title="change holiday"></Button>
-            <Button onPress={() => delHol(hol.id)} title="delete holiday"></Button>
+            {/* <Button onPress={() => changeHol(hol.id)} title="change holiday"></Button>
+            <Button onPress={() => delHol(hol.id)} title="delete holiday"></Button> */}
+            <Button onPress={() => shareHol(hol.id)} title="share holiday"></Button>
+            <Button onPress={() => delShareLink(hol.id)} title="delete share link"></Button>
           </View>
         );
       })}

@@ -6,14 +6,14 @@ import Login from "../../components/Login";
 import { userLogOut } from "../../utils/backendView";
 import Profile from "../../components/Profile";
 
-export default function ProfileScreen({ user, setUser, setUserloggedin }) {
+export default function ProfileScreen({ user, setUser, setUserLoggedIn }) {
   return (
     <>
       <Header />
       {user ? (
         <View style={styles.container}>
           <Text>Hello {user.displayName}</Text>
-          <Profile user={user}/>
+          <Profile user={user} />
           <Button
             onPress={() => {
               userLogOut();
@@ -24,8 +24,7 @@ export default function ProfileScreen({ user, setUser, setUserloggedin }) {
           </Button>
         </View>
       ) : (
-        <Login
-        setUserloggedin={setUserloggedin}/>
+        <Login setUserLoggedIn={setUserLoggedIn} />
       )}
     </>
   );
