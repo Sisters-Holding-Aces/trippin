@@ -4,6 +4,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { TouchableOpacity } from "react-native";
 import { Button, Card, IconButton, Text } from "react-native-paper";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import "../assets/airplane-icon-png-2506.png"
 
 const ActionSheet = ({ setMoreInfo, sheetData}) => {
   const bottomSheetRef = useRef(null);
@@ -38,15 +39,15 @@ const ActionSheet = ({ setMoreInfo, sheetData}) => {
         ) :
         (
           <>
-        <Card>
+        <Card style={{width: "70%", height: "35%", alignItems: "center"}}>
         <Card.Content>
-          <Text variant="headlineLarge">{sheetData.title}</Text>
-          <Text variant="bodyMedium"></Text>
+          <Text style={{alignSelf: "center"}} variant="headlineLarge">{sheetData.title}</Text>
         </Card.Content>
-        <Card.Cover source={{ uri: '/assets/airplane-icon-png-2506.png' }} />
+        <Card.Cover style={{backgroundColor: "clear", maxHeight: "50%",}} resizeMode="contain" source={{ uri: 'https://cdn-icons-png.flaticon.com/512/562/562740.png' }} />
         <Card.Actions>
           <Button mode="text">Edit</Button>
-          <TouchableOpacity mode="text"><Text>Share</Text></TouchableOpacity>
+          <Button mode="text">Share</Button>
+          <Button mode="text">Delete</Button>
         </Card.Actions>
       </Card>
         </>)}
@@ -67,6 +68,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: "center",
+    padding: 0,
   },
 });
 
