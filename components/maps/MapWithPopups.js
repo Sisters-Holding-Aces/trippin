@@ -20,8 +20,8 @@ const MapWithPopups = ({ holidays, memories }) => {
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [moreInfo, setMoreInfo] = useState(false);
-  const [bottomSheet, setBottomSheet] = useState()
-  const [sheetData, setSheetData] = useState()
+  const [bottomSheet, setBottomSheet] = useState();
+  const [sheetData, setSheetData] = useState();
 
   const mapView = useRef(null);
   const camera = useRef(null);
@@ -36,13 +36,16 @@ const MapWithPopups = ({ holidays, memories }) => {
     [holidays]
   );
 
-  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
+  const memoryFeatureCollection = useMemo(
+    () => memoriesGeoJsonFromData(memories),
+    [memories]
+  );
 
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
-    setSheetData(feature.properties)
+    setSheetData(feature.properties);
 
     // centers the selected pin on the screen
     setCoordinates(feature.geometry.coordinates);
@@ -91,15 +94,36 @@ const MapWithPopups = ({ holidays, memories }) => {
     });
   };
 
-
-  useEffect(()=>{
-    setBottomSheet(<ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />)
-  }, [moreInfo])
+  useEffect(() => {
+    setBottomSheet(
+      <ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />
+    );
+  }, [moreInfo]);
 
   return (
     <View style={styles.container}>
-      <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.TrafficNight} ref={mapView}>
-        <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} />
+      <Mapbox.MapView
+        style={styles.map}
+        styleURL={Mapbox.StyleURL.Street}
+        ref={mapView}
+        compassEnabled={true}
+        scaleBarEnabled={false}
+        onCameraChanged={(e) => {
+          // if the user used a gesture to change the camera while a popup was open,
+          // close it.
+          if (e.gestures.isGestureActive) {
+            setSelectedHoliday(null);
+            setSelectedMemory(null);
+          }
+        }}
+        projection="mercator"
+        rotateEnabled={true}
+      >
+        <Mapbox.Camera
+          centerCoordinate={coordinates}
+          animationDuration={700}
+          ref={camera}
+        />
 
         <Mapbox.Images images={{ markerHoliday, markerMemory }} />
 
