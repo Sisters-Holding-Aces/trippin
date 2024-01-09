@@ -30,7 +30,10 @@ const MapWithPopups = ({ holidays, memories }) => {
 
   const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
-  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
+  const memoryFeatureCollection = useMemo(
+    () => memoriesGeoJsonFromData(memories),
+    [memories]
+  );
 
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
@@ -86,7 +89,9 @@ const MapWithPopups = ({ holidays, memories }) => {
   };
 
   useEffect(() => {
-    setBottomSheet(<ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />);
+    setBottomSheet(
+      <ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />
+    );
   }, [moreInfo]);
 
   return (
@@ -95,16 +100,22 @@ const MapWithPopups = ({ holidays, memories }) => {
         style={styles.map}
         styleURL={Mapbox.StyleURL.TrafficNight}
         ref={mapView}
+        compassEnabled={true}
+        scaleBarEnabled={false}
         onCameraChanged={(e) => {
-          // if the user used a gesture to change the camera while a popup was open,
-          // close it.
-          if (e.gestures.isGestureActive) {
-            setSelectedHoliday(null);
-            setSelectedMemory(null);
-          }
-        }}
+            // if the user used a gesture to change the camera while a popup was open,
+            // close it.
+            if (e.gestures.isGestureActive) {
+              setSelectedHoliday(null);
+              setSelectedMemory(null);
+            }
+          }}
       >
-        <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} />
+        <Mapbox.Camera
+          centerCoordinate={coordinates}
+          animationDuration={700}
+          ref={camera}
+        />
 
         <Mapbox.Images images={{ markerHoliday, markerMemory }} />
 
