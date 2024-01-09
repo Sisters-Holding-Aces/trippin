@@ -6,14 +6,8 @@ import ProfileScreen from "./screens/ProfileScreen";
 import AllHolidaysScreen from "./screens/AllHolidaysScreen";
 
 export default function MainContainer({ user, setUser, setUserLoggedIn }) {
-  const HomeRoute = () => <HomeScreen />;
-  const ProfileRoute = () => (
-    <ProfileScreen
-      user={user}
-      setUser={setUser}
-      setUserLoggedIn={setUserLoggedIn}
-    />
-  );
+  const HomeRoute = () => <HomeScreen user={user} />;
+  const ProfileRoute = () => <ProfileScreen user={user} setUser={setUser} setUserLoggedIn={setUserLoggedIn} />;
   const AllHolidaysRoute = () => <AllHolidaysScreen user={user} />;
 
   const [index, setIndex] = useState(0);
@@ -79,11 +73,5 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
     profile: ProfileRoute,
   });
 
-  return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-    />
-  );
+  return <BottomNavigation navigationState={{ index, routes }} onIndexChange={setIndex} renderScene={renderScene} />;
 }

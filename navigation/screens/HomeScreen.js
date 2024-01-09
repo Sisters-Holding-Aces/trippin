@@ -1,82 +1,70 @@
-import { StyleSheet, Text, View } from "react-native";
-// import Header from "../../components/Header";
-import CustomMapView from "../../components/CustomMapView";
+import { StyleSheet, View } from "react-native";
 import MapWithPopups from "../../components/maps/MapWithPopups";
 import { ToggleButton } from "react-native-paper";
-import { useState } from "react";
+import { getUserInfo, memoriesByHoliday } from "../../utils/backendView";
+import { useEffect, useState, useRef } from "react";
+import { getHolidays } from "../../utils/controllers/backendHolidays";
+import dummyData from "../../components/maps/dummyData";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
-export default function HomeScreen() {
+export default function HomeScreen({ user }) {
+  const [holidays, setHolidays] = useState([]);
+  const [memories, setMemories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [status, setStatus] = useState(false);
 
   const onButtonToggle = (value) => {
     setStatus(status === "checked" ? "unchecked" : "checked");
   };
 
-  // console.log(status);
+  const userId = useRef(null);
 
-  const testData = [
-    {
-      title: "Berlin",
-      locationData: [13.4317618, 52.4827483],
-      startDate: "2021-01-03T02:00:00.000Z",
-      info: "My Trip to Berlin.",
-      id: "001",
-      memories: [
-        {
-          title: "Park",
-          locationData: [13.353087951539997, 52.51339022910384],
-          date: "2021-01-03T23:59:01.000Z",
-          info: "Had a lovely walk in this beautiful park.",
-          id: "001",
-        },
-        {
-          title: "Wall",
-          locationData: [13.44111, 52.50444],
-          date: "2021-01-06T23:01:01.000Z",
-          info: "It's lovely!",
-          id: "002",
-        },
-      ],
-    },
-    {
-      title: "Liverpool:",
-      locationData: [-2.983333, 53.400002],
-      startDate: "2022-04-05T06:00:00.000Z",
-      info: "My amazing trip to Liverpool!",
-      id: "002",
-      memories: [
-        {
-          title: "Boating Lake:",
-          locationData: [-2.9364495277404785, 53.38420486450195],
-          date: "2022-04-06T23:01:01.000Z",
-          info: "A relaxing walk around the lake.",
-          id: "001",
-        },
-        {
-          title: "Museum:",
-          locationData: [-2.9955708980560303, 53.402976989746094],
-          date: "2022-04-07T23:01:01.000Z",
-          info: "It's lovely!",
-          id: "002",
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    if (user) {
+      getUserInfo(user.displayName)
+        .then(({ id }) => {
+          userId.current = id;
+          return getHolidays(userId.current);
+        })
+        .then((userHolidays) => {
+          setHolidays(userHolidays);
+
+          const memoryPromises = userHolidays.map((holiday) => memoriesByHoliday(userId.current, holiday.id));
+          return Promise.all(memoryPromises);
+        })
+        .then((memories) => {
+          setMemories(memories.flat());
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setHolidays(dummyData.holidays);
+      setMemories(dummyData.memories);
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
     <>
-      {/* <Header /> */}
-      <View style={styles.container}>
-        <ToggleButton
-          style={styles.IconButton}
-          size={40}
-          icon="earth-plus"
-          iconColor="blue"
-          value="add-trip"
-          status={status}
-          onPress={onButtonToggle}
-        />
-        <MapWithPopups holidays={testData} />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        {isLoading ? (
+          <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
+        ) : (
+          <>
+            <ToggleButton
+              style={styles.IconButton}
+              size={40}
+              icon="earth-plus"
+              iconColor="blue"
+              value="add-trip"
+              status={status}
+              onPress={onButtonToggle}
+            />
+            <MapWithPopups holidays={holidays} memories={memories} />
+          </>
+        )}
       </View>
     </>
   );

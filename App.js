@@ -30,11 +30,7 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <MainContainer
-          user={user}
-          setUser={setUser}
-          setUserLoggedIn={setUserLoggedIn}
-        />
+        <MainContainer user={user} setUser={setUser} setUserLoggedIn={setUserLoggedIn} />
       </SafeAreaProvider>
     </SafeAreaView>
     // <View style={styles.page}>
