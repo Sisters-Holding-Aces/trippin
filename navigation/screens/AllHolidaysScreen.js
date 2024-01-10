@@ -394,6 +394,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
+    borderRadius: 10,
   },
   holiday_card: {
     gap: 5,

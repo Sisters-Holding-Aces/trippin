@@ -10,6 +10,8 @@ export const holidaysGeoJsonFromData = (holidays) => {
             popupType: "holiday",
             id: holiday.id,
             description: holiday.info,
+            date: holiday.startDate,
+            title: holiday.title
           },
           geometry: {
             type: "Point",
@@ -34,6 +36,8 @@ export const memoriesGeoJsonFromData = (memories) => {
             id: memory.id,
             title: memory.title,
             description: memory.info,
+            date: memory.date,
+            holidayRef: memory.holidayReference
           },
           geometry: {
             type: "Point",

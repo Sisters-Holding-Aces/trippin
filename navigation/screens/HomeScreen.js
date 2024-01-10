@@ -62,7 +62,7 @@ export default function HomeScreen({ user }) {
               status={status}
               onPress={onButtonToggle}
             />
-            <MapWithPopups holidays={holidays} memories={memories} />
+            <MapWithPopups holidays={holidays} memories={memories} user={user} />
           </>
         )}
       </View>

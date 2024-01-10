@@ -13,7 +13,6 @@ Mapbox.setAccessToken(
 const HolidayPopup = ({ holiday, isSelected, setSelectedHoliday, setMoreInfo }) => {
   
   const handleSeeMore = () => {
-      console.log("see more")
       setMoreInfo(true)
     }
   
