@@ -52,6 +52,7 @@ export default function MyFriendsHolidayScreen() {
             });
           }}
           style={styles.search}
+          autoCapitalize = "none"
           placeholder="Holiday's link"
           onChangeText={setHolidayLink}
           value={holidayLink}
