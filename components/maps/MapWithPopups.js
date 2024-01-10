@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, useWindowDimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import markerHoliday from "../../assets/marker-holiday.png";
 import markerMemory from "../../assets/marker-memory.png";
@@ -15,7 +15,9 @@ Mapbox.setAccessToken(
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MapWithPopups = ({ holidays, memories, userId, isEditable }) => {
+const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable }) => {
+  const [holidays, setHolidays] = useState(mapHolidays);
+  const [memories, setMemories] = useState(mapMemories);
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [moreInfo, setMoreInfo] = useState(false);
@@ -24,16 +26,6 @@ const MapWithPopups = ({ holidays, memories, userId, isEditable }) => {
 
   // determines whether the new pin overlay is shown
   const [addPinMode, setAddPinMode] = useState(false);
-
-  // determines what is being edited - 'trip', or 'memory'
-  const [editMode, setEditMode] = useState(null);
-
-  console.log("Add pin mode:", addPinMode);
-  console.log("Choosing to edit:", editMode);
-  console.log("userId", userId);
-
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
-  const windowCenter = { x: windowWidth / 2, y: windowHeight / 2 - 50 };
 
   const mapView = useRef(null);
   const camera = useRef(null);
@@ -74,19 +66,6 @@ const MapWithPopups = ({ holidays, memories, userId, isEditable }) => {
 
   const toggleAddPinMode = () => {
     setAddPinMode((m) => !m);
-  };
-
-  const selectEditMode = (mode) => {
-    // this mode input should be either 'trip' or 'memory'
-    setEditMode(mode);
-  };
-
-  const onConfirmAddPin = async () => {
-    const coordsToAdd = await mapView.current.getCoordinateFromView([windowCenter.x, windowCenter.y]);
-
-    console.log("adding pin! Location:", coordsToAdd);
-    setAddPinMode(false);
-    setEditMode(null); // later,might do this only after the form is submitted
   };
 
   const renderMemoryPopups = () => {
@@ -175,8 +154,10 @@ const MapWithPopups = ({ holidays, memories, userId, isEditable }) => {
         <NewPinAdder
           addPinMode={addPinMode}
           toggleAddPinMode={toggleAddPinMode}
-          onConfirmAddPin={onConfirmAddPin}
-          selectEditMode={selectEditMode}
+          setHolidays={setHolidays}
+          setMemories={setMemories}
+          mapViewRef={mapView.current}
+          userId={userId}
         />
       ) : (
         ""

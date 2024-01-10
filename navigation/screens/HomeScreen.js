@@ -45,7 +45,7 @@ export default function HomeScreen({ user }) {
         {isLoading ? (
           <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
         ) : (
-          <MapWithPopups holidays={holidays} memories={memories} userId={userId.current} isEditable={true} />
+          <MapWithPopups mapHolidays={holidays} mapMemories={memories} userId={userId.current} isEditable={true} />
         )}
       </View>
     </>

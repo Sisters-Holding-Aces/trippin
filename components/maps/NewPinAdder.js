@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useWindowDimensions, Image, View } from "react-native";
-import { FAB } from "react-native-paper";
+import { FAB, Portal, Text, ActivityIndicator, MD2Colors } from "react-native-paper";
+import { addHoliday } from "../../utils/backendView";
+import AddHolidayForm from "./AddHolidayForm";
 
-const NewPinAdder = ({ addPinMode, toggleAddPinMode, onConfirmAddPin, selectEditMode }) => {
+const NewPinAdder = ({ addPinMode, toggleAddPinMode, setHolidays, setMemories, mapViewRef, userId }) => {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [addHolidayFormOpen, setAddHolidayFormOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // determines what is being edited - 'holiday', or 'memory'
+  const [editMode, setEditMode] = useState(null);
+  console.log("Choosing to edit:", editMode);
+
+  const newLocation = useRef(null);
 
   // calculate the left and top offsets of the new pin marker so that
   // its bottom-center (where the pin tip is) coincides with
@@ -12,6 +22,32 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, onConfirmAddPin, selectEdit
   const windowCenter = { x: windowWidth / 2, y: windowHeight / 2 - 50 };
   const newPinSize = { width: 50, height: 50 };
   const newPinLocation = { left: windowCenter.x - newPinSize.width / 2, top: windowCenter.y - newPinSize.height };
+
+  const selectEditMode = (mode) => {
+    // this mode input should be either 'holiday' or 'memory'
+    setEditMode(mode);
+  };
+
+  const onConfirmAddPin = async () => {
+    const coordsToAdd = await mapViewRef.getCoordinateFromView([windowCenter.x, windowCenter.y]);
+    newLocation.current = { longitude: coordsToAdd[0], latitude: coordsToAdd[1] };
+
+    if (editMode === "holiday") {
+      setAddHolidayFormOpen(true);
+    } else if (editMode === "memory") {
+      console.log("adding a new memory");
+      // TODO
+    }
+    toggleAddPinMode();
+    setEditMode(null);
+  };
+
+  const onAddHoliday = async (newTitle) => {
+    const newHoliday = await addHoliday(userId, newTitle, newLocation.current);
+
+    setHolidays((currHolidays) => [newHoliday, ...currHolidays]);
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -22,10 +58,10 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, onConfirmAddPin, selectEdit
         actions={[
           {
             icon: "plus",
-            label: "Add Trip",
+            label: "Add Holiday",
             onPress: () => {
               toggleAddPinMode();
-              selectEditMode("trip");
+              selectEditMode("holiday");
               setMenuOpen(false);
             },
           },
@@ -72,6 +108,28 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, onConfirmAddPin, selectEdit
           color="#F9F9F9"
         />
       )}
+
+      {isLoading && (
+        <Portal>
+          <View style={customStyles.loadingScreen}>
+            <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
+          </View>
+        </Portal>
+      )}
+
+      {addHolidayFormOpen && (
+        <Portal>
+          <AddHolidayForm
+            newLocation={newLocation.current}
+            exitEditMode={() => {
+              selectEditMode(null);
+              setAddHolidayFormOpen(false);
+            }}
+            handleAddHoliday={onAddHoliday}
+            setAdding={setIsLoading}
+          />
+        </Portal>
+      )}
     </>
   );
 };
@@ -79,9 +137,6 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, onConfirmAddPin, selectEdit
 export default NewPinAdder;
 
 const customStyles = {
-  addButtonPortal: {
-    paddingBottom: 76,
-  },
   checkmarkButton: {
     position: "absolute",
     margin: 16,
@@ -95,5 +150,12 @@ const customStyles = {
     right: 0,
     bottom: 70,
     gap: 16,
+  },
+  loadingScreen: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#6D7DF3",
+    opacity: 0.3,
   },
 };
