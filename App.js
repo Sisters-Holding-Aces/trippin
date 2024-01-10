@@ -29,21 +29,21 @@ export default function App() {
   }, [userLoggedIn]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={styles.AndroidSafeArea}>
-        <PaperProvider>
-          <MainContainer
-            user={user}
-            setUser={setUser}
-            setUserLoggedIn={setUserLoggedIn}
-          />
-        </PaperProvider>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+    // <GestureHandlerRootView style={{ flex: 1 }}>
+    //   <SafeAreaView style={styles.AndroidSafeArea}>
+    //     <PaperProvider>
+    //       <MainContainer
+    //         user={user}
+    //         setUser={setUser}
+    //         setUserLoggedIn={setUserLoggedIn}
+    //       />
+    //     </PaperProvider>
+    //   </SafeAreaView>
+    // </GestureHandlerRootView>
     // <View style={styles.page}>
     //   <CustomMapView />
     // </View>
-    // <BackendTest />
+    <BackendTest />
   );
 }
 

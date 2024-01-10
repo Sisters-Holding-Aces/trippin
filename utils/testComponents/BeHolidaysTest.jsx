@@ -7,7 +7,7 @@ export default BeHolidaysTest = () => {
   const [hols, setHols] = useState([]);
   const [holAdded, setHolAdded] = useState(false);
 
-  const testUser = "TxiSR8vZCwWwln2WdENh"
+  const testUser = "hrcH4eGxSwHRjlRPbZ1x"
 
   useEffect(() => {
     holidaysByUser(testUser).then((res) => {
@@ -16,9 +16,9 @@ export default BeHolidaysTest = () => {
     // holidayById(testUser, 'uNFhKPtp3HT3taCJJZRg').then((res) => {
     //     console.log(res)
     // })
-    // useLinkToHoliday('e77wswfn0fN6').then((res) => {
-    //   console.log(res, '---')
-    // })
+    useLinkToHoliday('NZs9I9wlXl8T').then((res) => {
+      console.log(res, res.memories.length)
+    })
     setHolAdded(false)
   }, [holAdded]);
 
