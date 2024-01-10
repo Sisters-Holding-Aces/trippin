@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import MapWithPopups from "../../components/maps/MapWithPopups";
 import { useLinkToHoliday } from "../../utils/backendView";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dummyData from "../../components/maps/dummyData";
 import {
   ActivityIndicator,
@@ -43,7 +43,10 @@ export default function MyFriendsHolidayScreen() {
                 setErr(true);
                 setIsLoading(false);
               } else {
-                setHolidays([res]);
+                const justHolidayData = {...res}
+                delete justHolidayData.memories
+                setHolidays([justHolidayData]);
+                setMemories(res.memories);
                 setIsLoading(false);
               }
             });
