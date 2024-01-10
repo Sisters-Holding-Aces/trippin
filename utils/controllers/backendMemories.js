@@ -60,6 +60,7 @@ export const postMemory = async (userId, holidayId, title, location) => {
       title: title,
       locationData: currentLocation,
       date: currentDate,
+      holidayReference: holidayId
     };
     try {
       const newDoc = await addDoc(memoryRef, data);

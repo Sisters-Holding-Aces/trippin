@@ -12,7 +12,7 @@ export const createShareLink = async (userId, holidayId) => {
         } else {
             const shareCode = randomCode()
             const data = {shareLink: shareCode}
-        
+            
             try {
                 await updateDoc(docRef, data);
                 const newDoc = await getDoc(docRef)
@@ -51,9 +51,28 @@ export const getSharedLink = async (link) => {
             ...doc.data(),
             id: doc.id,
         }));
-        
+
         const filteredDocs = mappedDocs.filter((doc) => doc.shareLink === link)
-        if (filteredDocs.length === 1) return filteredDocs[0]
+
+        if (filteredDocs.length === 1) {
+            const memoriesCollection = collectionGroup(db, 'memories')
+            try {
+                const memories = await getDocs(memoriesCollection)
+                
+                const mappedMemories = memories.docs.map((mem) => ({
+                    ...mem.data(),
+                    id: mem.id
+                }))
+                
+                const filteredMemories = mappedMemories.filter((mem) => mem.holidayReference === filteredDocs[0].id)
+
+                filteredDocs[0].memories = filteredMemories
+                return filteredDocs[0]
+            } catch (err) {
+                return err
+            }
+
+        }
         else return {msg: 'Invalid link.'}
     } catch (err) {
         return err
