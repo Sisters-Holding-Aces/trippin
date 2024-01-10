@@ -31,7 +31,9 @@ export default function MyFriendsHolidayScreen() {
             size={"large"}
           />
         ) : (
-          <MapWithPopups holidays={holidays} memories={memories} />
+          <MapWithPopups holidays={holidays} memories={memories} 
+          isEditable={false}
+          />
         )}
         <Searchbar
           onIconPress={() => {
