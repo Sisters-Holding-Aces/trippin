@@ -10,18 +10,20 @@ import {
   memoriesGeoJsonFromData,
 } from "../../utils/maps/geojson";
 import ActionSheet from "../BottomSheet";
+import BottomModal from "../Bottom-Sheet/BottomModal";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MapWithPopups = ({ holidays, memories }) => {
+const MapWithPopups = ({ holidays, memories, user}) => {
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [moreInfo, setMoreInfo] = useState(false);
   const [bottomSheet, setBottomSheet] = useState();
   const [sheetData, setSheetData] = useState();
+  const [modalOpen, setModalOpen] = useState(null)
 
   const mapView = useRef(null);
   const camera = useRef(null);
@@ -41,11 +43,12 @@ const MapWithPopups = ({ holidays, memories }) => {
     [memories]
   );
 
+
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
-    setSheetData(feature.properties);
+    setSheetData(feature);
 
     // centers the selected pin on the screen
     setCoordinates(feature.geometry.coordinates);
@@ -96,11 +99,18 @@ const MapWithPopups = ({ holidays, memories }) => {
 
   useEffect(() => {
     setBottomSheet(
-      <ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />
+      <ActionSheet setModalOpen={setModalOpen} moreInfo={moreInfo} setCoordinates={setCoordinates} memories={memories} sheetData={sheetData} setMoreInfo={setMoreInfo} />
     );
   }, [moreInfo]);
 
+  useEffect(()=>{
+    console.log(coordinates, "map")
+  }, [coordinates])
+
+
+
   return (
+    <>
     <View style={styles.container}>
       <Mapbox.MapView
         style={styles.map}
@@ -157,6 +167,8 @@ const MapWithPopups = ({ holidays, memories }) => {
       </Mapbox.MapView>
       {moreInfo && bottomSheet}
     </View>
+    {modalOpen && (<BottomModal user={user} setModalOpen={setModalOpen} />)}
+    </>
   );
 };
 

@@ -79,7 +79,7 @@ export default function AllHolidaysScreen({ user }) {
         <Card.Title title="All holidays" titleVariant="titleLarge" />
         {allHolidays.map((holiday) => {
           return (
-            <Card key={holiday.id}>
+            <Card key={holiday.id} style={{paddingBottom: 20}}>
               <Card.Content>
                 <Text variant="titleMedium">{holiday.title}</Text>
                 <Text variant="bodyMedium">
@@ -452,5 +452,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
+    borderRadius: 10,
   },
 });

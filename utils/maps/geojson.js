@@ -36,7 +36,8 @@ export const memoriesGeoJsonFromData = (memories) => {
             id: memory.id,
             title: memory.title,
             description: memory.info,
-            date: memory.date
+            date: memory.date,
+            holidayRef: memory.holidayReference
           },
           geometry: {
             type: "Point",

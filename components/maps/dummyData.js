@@ -22,6 +22,7 @@ const memories = [
     date: "2021-01-03T23:59:01.000Z",
     info: "Had a lovely walk in this beautiful park.",
     id: "001",
+    holidayReference: "001"
   },
   {
     title: "Wall",
@@ -29,6 +30,7 @@ const memories = [
     date: "2021-01-06T23:01:01.000Z",
     info: "It's lovely!",
     id: "002",
+    holidayReference: "001"
   },
   {
     title: "Boating Lake:",
@@ -36,6 +38,7 @@ const memories = [
     date: "2022-04-06T23:01:01.000Z",
     info: "A relaxing walk around the lake.",
     id: "003",
+    holidayReference: "002"
   },
   {
     title: "Museum:",
@@ -43,6 +46,7 @@ const memories = [
     date: "2022-04-07T23:01:01.000Z",
     info: "It's lovely!",
     id: "004",
+    holidayReference: "002"
   },
 ];
 
