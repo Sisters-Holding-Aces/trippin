@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Pressable } from "react-native";
-import {
-  Button,
-  Card,
-  Text,
-  Dialog,
-  Portal,
-  PaperProvider,
-  TextInput,
-  Modal,
-} from "react-native-paper";
+import { Button, Card, Text, Dialog, Portal, PaperProvider, TextInput, Modal, Icon } from "react-native-paper";
 import {
   addLinkToHoliday,
   editHoliday,
@@ -24,25 +15,25 @@ import {
 } from "../../utils/backendView";
 
 export default function AllHolidaysScreen({ user }) {
-  const [allHolidays, setAllHolidays] = useState([]);
-  const [deleteBoxVisible, setDeleteBoxVisible] = useState(false);
-  const [editBoxVisible, setEditBoxVisible] = useState(false);
   const [userId, setUserId] = useState("");
-  const [holidayToBeDelete, setHolidayToBeDelete] = useState("");
+  const [allHolidays, setAllHolidays] = useState([]);
+  const [shareBoxVisible, setShareBoxVisible] = useState(false);
+  const [holidayToBeShare, setHolidayToBeShare] = useState("");
+  const [editBoxVisible, setEditBoxVisible] = useState(false);
   const [holidayToBeEdit, setHolidayToBeEdit] = useState("");
   const [newHolidayTitle, setNewHolidayTitle] = useState("");
   const [newHolidayInfo, setNewHolidayInfo] = useState("");
-  const [allMemoriesVisible, setAllMemoriesVisible] = useState(false);
+  const [deleteBoxVisible, setDeleteBoxVisible] = useState(false);
+  const [holidayToBeDelete, setHolidayToBeDelete] = useState("");
   const [selectedHoliday, setSelectedHoliday] = useState(false);
   const [allMemories, setAllMemories] = useState([]);
-  const [memoryDeleteBoxVisible, setMemoryDeleteBoxVisible] = useState(false);
+  const [allMemoriesVisible, setAllMemoriesVisible] = useState(false);
   const [memoryEditBoxVisible, setMemoryEditBoxVisible] = useState(false);
-  const [memoryToBeDelete, setMemoryToBeDelete] = useState("");
   const [memoryToBeEdit, setMemoryToBeEdit] = useState("");
   const [newMemoryTitle, setNewMemoryTitle] = useState("");
   const [newMemoryNote, setNewMemoryNote] = useState("");
-  const [shareBoxVisible, setShareBoxVisible] = useState(false);
-  const [holidayToBeShare, setHolidayToBeShare] = useState("");
+  const [memoryDeleteBoxVisible, setMemoryDeleteBoxVisible] = useState(false);
+  const [memoryToBeDelete, setMemoryToBeDelete] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -76,31 +67,28 @@ export default function AllHolidaysScreen({ user }) {
   return (
     <PaperProvider>
       <ScrollView style={styles.container}>
+        {/********************** all holidays card **********************/}
         <Card.Title title="All holidays" titleVariant="titleLarge" />
         {allHolidays.map((holiday) => {
           return (
-            <Card key={holiday.id} style={{paddingBottom: 20}}>
-              <Card.Content>
-                <Text variant="titleMedium">{holiday.title}</Text>
-                <Text variant="bodyMedium">
-                  {holiday.startDate.toDate().toLocaleDateString()}
-                </Text>
-                {holiday.info ? (
-                  <Text variant="bodyMedium">{holiday.info}</Text>
-                ) : null}
+            <Card key={holiday.id}>
+              <Card.Content style={styles.holiday_card}>
+                <Text variant="titleLarge">{holiday.title}</Text>
+                <Text variant="bodyMedium">{holiday.startDate.toDate().toLocaleDateString()}</Text>
+                {holiday.info ? <Text variant="bodyMedium">{holiday.info}</Text> : null}
                 <Pressable
+                  style={styles.see_memories}
                   onPress={() => {
                     setAllMemoriesVisible(true);
                     setSelectedHoliday(holiday);
                   }}
                 >
-                  <Text style={{ color: "darkslateblue", fontWeight: "bold" }}>
-                    See memories...
-                  </Text>
+                  <Text style={{ color: "darkslateblue", fontWeight: "bold" }}>See memories...</Text>
                 </Pressable>
               </Card.Content>
               <Card.Actions>
                 <Button
+                  icon="share"
                   mode="outlined"
                   onPress={() => {
                     setShareBoxVisible(true);
@@ -110,6 +98,7 @@ export default function AllHolidaysScreen({ user }) {
                   Share
                 </Button>
                 <Button
+                  icon="pencil"
                   mode="contained-tonal"
                   onPress={() => {
                     setEditBoxVisible(true);
@@ -119,6 +108,7 @@ export default function AllHolidaysScreen({ user }) {
                   Edit
                 </Button>
                 <Button
+                  icon="delete"
                   onPress={() => {
                     setDeleteBoxVisible(true);
                     setHolidayToBeDelete(holiday.id);
@@ -131,6 +121,96 @@ export default function AllHolidaysScreen({ user }) {
           );
         })}
         <Portal>
+          {/********************** share holiday box **********************/}
+          <Dialog
+            visible={shareBoxVisible}
+            onDismiss={() => {
+              setShareBoxVisible(false);
+            }}
+          >
+            <Dialog.Title>Share it to your friends!</Dialog.Title>
+            <Dialog.Content>
+              {holidayToBeShare.shareLink ? (
+                <Text variant="bodyLarge">
+                  Link:{"\n"}
+                  {holidayToBeShare.shareLink}
+                </Text>
+              ) : (
+                <Pressable
+                  onPress={() => {
+                    addLinkToHoliday(userId, holidayToBeShare.id).then((res) => {
+                      setHolidayToBeShare({
+                        ...res,
+                        id: holidayToBeShare.id,
+                      });
+                    });
+                  }}
+                >
+                  <Text style={{ color: "darkslateblue" }} variant="bodyLarge">
+                    Create a link
+                  </Text>
+                </Pressable>
+              )}
+            </Dialog.Content>
+            {holidayToBeShare.shareLink ? (
+              <Dialog.Actions>
+                <Button
+                  onPress={() => {
+                    removeLinkFromHoliday(userId, holidayToBeShare.id).then(() => {
+                      holidayById(userId, holidayToBeShare.id).then((res) => {
+                        setHolidayToBeShare({
+                          ...res,
+                          id: holidayToBeShare.id,
+                        });
+                      });
+                    });
+                  }}
+                >
+                  Deactivate link
+                </Button>
+              </Dialog.Actions>
+            ) : null}
+          </Dialog>
+          {/********************** edit holiday box **********************/}
+          <Dialog
+            visible={editBoxVisible}
+            onDismiss={() => {
+              setEditBoxVisible(false);
+            }}
+          >
+            <Dialog.Title>Edit</Dialog.Title>
+            <Dialog.Content>
+              <TextInput label="Title" value={newHolidayTitle} onChangeText={(text) => setNewHolidayTitle(text)} />
+              <TextInput label="Info" value={newHolidayInfo} onChangeText={(text) => setNewHolidayInfo(text)} />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button
+                onPress={() => {
+                  const promise1 = editHoliday(userId, holidayToBeEdit.id, "title", newHolidayTitle);
+                  const promise2 = editHoliday(userId, holidayToBeEdit.id, "info", newHolidayInfo);
+
+                  Promise.all([promise1, promise2]).then(() => {
+                    holidaysByUser(userId).then((res) => {
+                      setAllHolidays(res);
+                    });
+                  });
+                  setEditBoxVisible(false);
+                  setHolidayToBeEdit("");
+                }}
+              >
+                Submit
+              </Button>
+              <Button
+                onPress={() => {
+                  setEditBoxVisible(false);
+                  setHolidayToBeEdit("");
+                }}
+              >
+                Cancel
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+          {/********************** delete holiday box **********************/}
           <Dialog
             visible={deleteBoxVisible}
             onDismiss={() => {
@@ -140,8 +220,7 @@ export default function AllHolidaysScreen({ user }) {
             <Dialog.Title>Alert</Dialog.Title>
             <Dialog.Content>
               <Text variant="bodyMedium">
-                By deleting this holiday, you will delete all the associated
-                memories as well.
+                By deleting this holiday, you will delete all the associated memories as well.
               </Text>
             </Dialog.Content>
             <Dialog.Actions>
@@ -167,62 +246,7 @@ export default function AllHolidaysScreen({ user }) {
               </Button>
             </Dialog.Actions>
           </Dialog>
-          <Dialog
-            visible={editBoxVisible}
-            onDismiss={() => {
-              setEditBoxVisible(false);
-            }}
-          >
-            <Dialog.Title>Edit</Dialog.Title>
-            <Dialog.Content>
-              <TextInput
-                label="Title"
-                value={newHolidayTitle}
-                onChangeText={(text) => setNewHolidayTitle(text)}
-              />
-              <TextInput
-                label="Info"
-                value={newHolidayInfo}
-                onChangeText={(text) => setNewHolidayInfo(text)}
-              />
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button
-                onPress={() => {
-                  const promise1 = editHoliday(
-                    userId,
-                    holidayToBeEdit.id,
-                    "title",
-                    newHolidayTitle
-                  );
-                  const promise2 = editHoliday(
-                    userId,
-                    holidayToBeEdit.id,
-                    "info",
-                    newHolidayInfo
-                  );
-
-                  Promise.all([promise1, promise2]).then(() => {
-                    holidaysByUser(userId).then((res) => {
-                      setAllHolidays(res);
-                    });
-                  });
-                  setEditBoxVisible(false);
-                  setHolidayToBeEdit("");
-                }}
-              >
-                Submit
-              </Button>
-              <Button
-                onPress={() => {
-                  setEditBoxVisible(false);
-                  setHolidayToBeEdit("");
-                }}
-              >
-                Cancel
-              </Button>
-            </Dialog.Actions>
-          </Dialog>
+          {/********************** all memories card **********************/}
           <Modal
             visible={allMemoriesVisible}
             onDismiss={() => {
@@ -237,10 +261,7 @@ export default function AllHolidaysScreen({ user }) {
             }}
           >
             <ScrollView>
-              <Card.Title
-                title={selectedHoliday.title}
-                titleVariant="titleLarge"
-              />
+              <Card.Title title={selectedHoliday.title} titleVariant="titleLarge" />
               {allMemories.length === 0 ? (
                 <Card>
                   <Card.Content>
@@ -253,9 +274,7 @@ export default function AllHolidaysScreen({ user }) {
                     <Card key={memory.id}>
                       <Card.Content>
                         <Text variant="titleMedium">{memory.title}</Text>
-                        <Text variant="bodyMedium">
-                          {memory.date.toDate().toLocaleDateString()}
-                        </Text>
+                        <Text variant="bodyMedium">{memory.date.toDate().toLocaleDateString()}</Text>
                         <Text variant="bodyMedium">{memory.note}</Text>
                       </Card.Content>
                       <Card.Actions>
@@ -284,49 +303,7 @@ export default function AllHolidaysScreen({ user }) {
               )}
             </ScrollView>
           </Modal>
-          <Dialog
-            visible={memoryDeleteBoxVisible}
-            onDismiss={() => {
-              setMemoryDeleteBoxVisible(false);
-            }}
-          >
-            <Dialog.Title>Alert</Dialog.Title>
-            <Dialog.Content>
-              <Text variant="bodyMedium">
-                Are you sure you want to delete this memory?
-              </Text>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button
-                onPress={() => {
-                  removeMemory(
-                    userId,
-                    selectedHoliday.id,
-                    memoryToBeDelete
-                  ).then(() => {
-                    memoriesByHoliday(userId, selectedHoliday.id)
-                      .then((res) => {
-                        setAllMemories(res);
-                      })
-                      .catch(() => {});
-                  });
-                  setMemoryDeleteBoxVisible(false);
-                  setAllMemoriesVisible(true);
-                  setMemoryToBeDelete("");
-                }}
-              >
-                Delete
-              </Button>
-              <Button
-                onPress={() => {
-                  setMemoryDeleteBoxVisible(false);
-                  setAllMemoriesVisible(true);
-                }}
-              >
-                Cancel
-              </Button>
-            </Dialog.Actions>
-          </Dialog>
+          {/********************** edit memory box **********************/}
           <Dialog
             visible={memoryEditBoxVisible}
             onDismiss={() => {
@@ -335,34 +312,14 @@ export default function AllHolidaysScreen({ user }) {
           >
             <Dialog.Title>Edit</Dialog.Title>
             <Dialog.Content>
-              <TextInput
-                label="Title"
-                value={newMemoryTitle}
-                onChangeText={(text) => setNewMemoryTitle(text)}
-              />
-              <TextInput
-                label="Info"
-                value={newMemoryNote}
-                onChangeText={(text) => setNewMemoryNote(text)}
-              />
+              <TextInput label="Title" value={newMemoryTitle} onChangeText={(text) => setNewMemoryTitle(text)} />
+              <TextInput label="Info" value={newMemoryNote} onChangeText={(text) => setNewMemoryNote(text)} />
             </Dialog.Content>
             <Dialog.Actions>
               <Button
                 onPress={() => {
-                  const promise1 = editMemory(
-                    userId,
-                    selectedHoliday.id,
-                    memoryToBeEdit.id,
-                    "title",
-                    newMemoryTitle
-                  );
-                  const promise2 = editMemory(
-                    userId,
-                    selectedHoliday.id,
-                    memoryToBeEdit.id,
-                    "note",
-                    newMemoryNote
-                  );
+                  const promise1 = editMemory(userId, selectedHoliday.id, memoryToBeEdit.id, "title", newMemoryTitle);
+                  const promise2 = editMemory(userId, selectedHoliday.id, memoryToBeEdit.id, "note", newMemoryNote);
 
                   Promise.all([promise1, promise2]).then(() => {
                     memoriesByHoliday(userId, selectedHoliday.id)
@@ -389,58 +346,43 @@ export default function AllHolidaysScreen({ user }) {
               </Button>
             </Dialog.Actions>
           </Dialog>
+          {/********************** delete memory box **********************/}
           <Dialog
-            visible={shareBoxVisible}
+            visible={memoryDeleteBoxVisible}
             onDismiss={() => {
-              setShareBoxVisible(false);
+              setMemoryDeleteBoxVisible(false);
             }}
           >
-            <Dialog.Title>Share it to your friends!</Dialog.Title>
+            <Dialog.Title>Alert</Dialog.Title>
             <Dialog.Content>
-              {holidayToBeShare.shareLink ? (
-                <Text variant="bodyLarge">
-                  Link:{"\n"}
-                  {holidayToBeShare.shareLink}
-                </Text>
-              ) : (
-                <Pressable
-                  onPress={() => {
-                    addLinkToHoliday(userId, holidayToBeShare.id).then(
-                      (res) => {
-                        setHolidayToBeShare({
-                          ...res,
-                          id: holidayToBeShare.id,
-                        });
-                      }
-                    );
-                  }}
-                >
-                  <Text style={{ color: "darkslateblue" }} variant="bodyLarge">
-                    Create a link
-                  </Text>
-                </Pressable>
-              )}
+              <Text variant="bodyMedium">Are you sure you want to delete this memory?</Text>
             </Dialog.Content>
-            {holidayToBeShare.shareLink ? (
-              <Dialog.Actions>
-                <Button
-                  onPress={() => {
-                    removeLinkFromHoliday(userId, holidayToBeShare.id).then(
-                      () => {
-                        holidayById(userId, holidayToBeShare.id).then((res) => {
-                          setHolidayToBeShare({
-                            ...res,
-                            id: holidayToBeShare.id,
-                          });
-                        });
-                      }
-                    );
-                  }}
-                >
-                  Deactivate link
-                </Button>
-              </Dialog.Actions>
-            ) : null}
+            <Dialog.Actions>
+              <Button
+                onPress={() => {
+                  removeMemory(userId, selectedHoliday.id, memoryToBeDelete).then(() => {
+                    memoriesByHoliday(userId, selectedHoliday.id)
+                      .then((res) => {
+                        setAllMemories(res);
+                      })
+                      .catch(() => {});
+                  });
+                  setMemoryDeleteBoxVisible(false);
+                  setAllMemoriesVisible(true);
+                  setMemoryToBeDelete("");
+                }}
+              >
+                Delete
+              </Button>
+              <Button
+                onPress={() => {
+                  setMemoryDeleteBoxVisible(false);
+                  setAllMemoriesVisible(true);
+                }}
+              >
+                Cancel
+              </Button>
+            </Dialog.Actions>
           </Dialog>
         </Portal>
       </ScrollView>
@@ -453,5 +395,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     borderRadius: 10,
+  },
+  holiday_card: {
+    gap: 5,
+    paddingBottom: 5,
+  },
+  see_memories: {
+    paddingTop: 10,
+    paddingBottom: 10,
   },
 });

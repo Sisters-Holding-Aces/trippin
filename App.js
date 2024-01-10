@@ -40,9 +40,9 @@ export default function App() {
         </PaperProvider>
       </SafeAreaView>
     </GestureHandlerRootView>
-    // <View style={styles.page}>
-    //   <CustomMapView />
-    // </View>
+    // // <View style={styles.page}>
+    // //   <CustomMapView />
+    // // </View>
     // <BackendTest />
   );
 }

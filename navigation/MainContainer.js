@@ -4,12 +4,19 @@ import { BottomNavigation, Text } from "react-native-paper";
 import HomeScreen from "./screens/HomeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AllHolidaysScreen from "./screens/AllHolidaysScreen";
+import MyFriendsHolidayScreen from "./screens/MyFriendsHolidayScreen";
 
 export default function MainContainer({ user, setUser, setUserLoggedIn }) {
   const HomeRoute = () => <HomeScreen user={user} />;
-  const ProfileRoute = () => <ProfileScreen user={user} setUser={setUser} setUserLoggedIn={setUserLoggedIn} />;
+  const ProfileRoute = () => (
+    <ProfileScreen
+      user={user}
+      setUser={setUser}
+      setUserLoggedIn={setUserLoggedIn}
+    />
+  );
   const AllHolidaysRoute = () => <AllHolidaysScreen user={user} />;
-
+  const MyFriendsHolidayRoute = () => <MyFriendsHolidayScreen />;
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([
     {
@@ -17,6 +24,12 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
       title: "Home",
       focusedIcon: "home",
       unfocusedIcon: "home-outline",
+    },
+    {
+      key: "myFriendsHoliday",
+      title: "My friend's holiday",
+      focusedIcon: "account-group",
+      unfocusedIcon: "account-group-outline",
     },
     {
       key: "profile",
@@ -34,6 +47,12 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
           title: "Home",
           focusedIcon: "home",
           unfocusedIcon: "home-outline",
+        },
+        {
+          key: "myFriendsHoliday",
+          title: "My friend's holiday",
+          focusedIcon: "account-group",
+          unfocusedIcon: "account-group-outline",
         },
         {
           key: "allHolidays",
@@ -57,6 +76,12 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
           unfocusedIcon: "home-outline",
         },
         {
+          key: "myFriendsHoliday",
+          title: "My friend's holiday",
+          focusedIcon: "account-group",
+          unfocusedIcon: "account-group-outline",
+        },
+        {
           key: "profile",
           title: "Profile",
           focusedIcon: "account",
@@ -69,9 +94,16 @@ export default function MainContainer({ user, setUser, setUserLoggedIn }) {
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute,
+    myFriendsHoliday: MyFriendsHolidayRoute,
     allHolidays: AllHolidaysRoute,
     profile: ProfileRoute,
   });
 
-  return <BottomNavigation navigationState={{ index, routes }} onIndexChange={setIndex} renderScene={renderScene} />;
+  return (
+    <BottomNavigation
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={renderScene}
+    />
+  );
 }
