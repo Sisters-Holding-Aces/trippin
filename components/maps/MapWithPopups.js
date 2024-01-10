@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image, useWindowDimensions } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import markerHoliday from "../../assets/marker-holiday.png";
 import markerMemory from "../../assets/marker-memory.png";
@@ -8,18 +8,32 @@ import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
 import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/maps/geojson";
 import ActionSheet from "../BottomSheet";
+import NewPinAdder from "./NewPinAdder";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MapWithPopups = ({ holidays, memories }) => {
+const MapWithPopups = ({ holidays, memories, userId, isEditable }) => {
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [moreInfo, setMoreInfo] = useState(false);
   const [bottomSheet, setBottomSheet] = useState();
   const [sheetData, setSheetData] = useState();
+
+  // determines whether the new pin overlay is shown
+  const [addPinMode, setAddPinMode] = useState(false);
+
+  // determines what is being edited - 'trip', or 'memory'
+  const [editMode, setEditMode] = useState(null);
+
+  console.log("Add pin mode:", addPinMode);
+  console.log("Choosing to edit:", editMode);
+  console.log("userId", userId);
+
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const windowCenter = { x: windowWidth / 2, y: windowHeight / 2 - 50 };
 
   const mapView = useRef(null);
   const camera = useRef(null);
@@ -56,6 +70,23 @@ const MapWithPopups = ({ holidays, memories }) => {
         setSelectedMemory(id);
       }
     }
+  };
+
+  const toggleAddPinMode = () => {
+    setAddPinMode((m) => !m);
+  };
+
+  const selectEditMode = (mode) => {
+    // this mode input should be either 'trip' or 'memory'
+    setEditMode(mode);
+  };
+
+  const onConfirmAddPin = async () => {
+    const coordsToAdd = await mapView.current.getCoordinateFromView([windowCenter.x, windowCenter.y]);
+
+    console.log("adding pin! Location:", coordsToAdd);
+    setAddPinMode(false);
+    setEditMode(null); // later,might do this only after the form is submitted
   };
 
   const renderMemoryPopups = () => {
@@ -119,6 +150,14 @@ const MapWithPopups = ({ holidays, memories }) => {
           }}
         />
 
+        {/* an overlay that appears when 'Add Pin' mode is ON */}
+        {addPinMode && (
+          <Mapbox.BackgroundLayer
+            id="editBackgroundLayer"
+            style={{ backgroundColor: "#93B7B4", backgroundOpacity: 0.2 }}
+          />
+        )}
+
         {/* memories layer */}
         <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
           <Mapbox.SymbolLayer id="memoryPinsLayer" style={customStyles.memoryPinsLayer} minZoomLevel={8} />
@@ -131,6 +170,18 @@ const MapWithPopups = ({ holidays, memories }) => {
           {renderHolidayPopups()}
         </Mapbox.ShapeSource>
       </Mapbox.MapView>
+
+      {userId && isEditable ? (
+        <NewPinAdder
+          addPinMode={addPinMode}
+          toggleAddPinMode={toggleAddPinMode}
+          onConfirmAddPin={onConfirmAddPin}
+          selectEditMode={selectEditMode}
+        />
+      ) : (
+        ""
+      )}
+
       {moreInfo && bottomSheet}
     </View>
   );
@@ -139,10 +190,6 @@ const MapWithPopups = ({ holidays, memories }) => {
 export default MapWithPopups;
 
 const customStyles = {
-  callout: {
-    borderRadius: 5,
-    padding: 10,
-  },
   holidayPinsLayer: {
     iconAllowOverlap: true,
     iconAnchor: "bottom",

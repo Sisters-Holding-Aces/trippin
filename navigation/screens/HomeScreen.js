@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native";
 import MapWithPopups from "../../components/maps/MapWithPopups";
-import { ToggleButton } from "react-native-paper";
 import { getUserInfo, memoriesByHoliday } from "../../utils/backendView";
 import { useEffect, useState, useRef } from "react";
 import { getHolidays } from "../../utils/controllers/backendHolidays";
@@ -11,12 +10,6 @@ export default function HomeScreen({ user }) {
   const [holidays, setHolidays] = useState([]);
   const [memories, setMemories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [status, setStatus] = useState(false);
-
-  const onButtonToggle = (value) => {
-    setStatus(status === "checked" ? "unchecked" : "checked");
-  };
 
   const userId = useRef(null);
 
@@ -52,18 +45,7 @@ export default function HomeScreen({ user }) {
         {isLoading ? (
           <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
         ) : (
-          <>
-            <ToggleButton
-              style={styles.IconButton}
-              size={40}
-              icon="earth-plus"
-              iconColor="blue"
-              value="add-trip"
-              status={status}
-              onPress={onButtonToggle}
-            />
-            <MapWithPopups holidays={holidays} memories={memories} />
-          </>
+          <MapWithPopups holidays={holidays} memories={memories} userId={userId.current} isEditable={true} />
         )}
       </View>
     </>
