@@ -1,11 +1,15 @@
 import { StyleSheet, View } from "react-native";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import markerHoliday from "../../assets/marker-holiday.png";
 import markerMemory from "../../assets/marker-memory.png";
 import Mapbox from "@rnmapbox/maps";
 import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
-import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/maps/geojson";
+import {
+  holidaysGeoJsonFromData,
+  memoriesGeoJsonFromData,
+} from "../../utils/maps/geojson";
+import ActionSheet from "../BottomSheet";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
@@ -15,6 +19,10 @@ Mapbox.setAccessToken(
 const MapWithPopups = ({ holidays, memories }) => {
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
+  const [moreInfo, setMoreInfo] = useState(false);
+  const [bottomSheet, setBottomSheet] = useState();
+  const [sheetData, setSheetData] = useState();
+
   const mapView = useRef(null);
   const camera = useRef(null);
 
@@ -23,14 +31,21 @@ const MapWithPopups = ({ holidays, memories }) => {
     holidays[0].locationData.latitude,
   ]);
 
-  const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
+  const holidayFeatureCollection = useMemo(
+    () => holidaysGeoJsonFromData(holidays),
+    [holidays]
+  );
 
-  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
+  const memoryFeatureCollection = useMemo(
+    () => memoriesGeoJsonFromData(memories),
+    [memories]
+  );
 
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
+    setSheetData(feature.properties);
 
     // centers the selected pin on the screen
     setCoordinates(feature.geometry.coordinates);
@@ -59,6 +74,7 @@ const MapWithPopups = ({ holidays, memories }) => {
           memory={memory}
           isSelected={selectedMemory === memory.id ? true : false}
           setSelectedMemory={setSelectedMemory}
+          setMoreInfo={setMoreInfo}
         />
       );
     });
@@ -72,30 +88,74 @@ const MapWithPopups = ({ holidays, memories }) => {
           holiday={holiday}
           isSelected={selectedHoliday === holiday.id ? true : false}
           setSelectedHoliday={setSelectedHoliday}
+          setMoreInfo={setMoreInfo}
         />
       );
     });
   };
 
+  useEffect(() => {
+    setBottomSheet(
+      <ActionSheet sheetData={sheetData} setMoreInfo={setMoreInfo} />
+    );
+  }, [moreInfo]);
+
   return (
     <View style={styles.container}>
-      <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.TrafficNight} ref={mapView}>
-        <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} />
+      <Mapbox.MapView
+        style={styles.map}
+        styleURL={Mapbox.StyleURL.Street}
+        ref={mapView}
+        compassEnabled={true}
+        scaleBarEnabled={false}
+        onCameraChanged={(e) => {
+          // if the user used a gesture to change the camera while a popup was open,
+          // close it.
+          if (e.gestures.isGestureActive) {
+            setSelectedHoliday(null);
+            setSelectedMemory(null);
+          }
+        }}
+        projection="mercator"
+        rotateEnabled={true}
+      >
+        <Mapbox.Camera
+          centerCoordinate={coordinates}
+          animationDuration={700}
+          ref={camera}
+        />
 
         <Mapbox.Images images={{ markerHoliday, markerMemory }} />
 
         {/* memories layer */}
-        <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
-          <Mapbox.SymbolLayer id="memoryPinsLayer" style={customStyles.memoryPinsLayer} minZoomLevel={8} />
+        <Mapbox.ShapeSource
+          id="memoryPinsSource"
+          shape={memoryFeatureCollection}
+          onPress={onPinPress}
+        >
+          <Mapbox.SymbolLayer
+            id="memoryPinsLayer"
+            style={customStyles.memoryPinsLayer}
+            minZoomLevel={8}
+          />
           {renderMemoryPopups()}
         </Mapbox.ShapeSource>
 
         {/* holidays layer: rendered above and after the memories layer */}
-        <Mapbox.ShapeSource id="holidayPinsSource" shape={holidayFeatureCollection} onPress={onPinPress}>
-          <Mapbox.SymbolLayer id="holidayPinsLayer" style={customStyles.holidayPinsLayer} maxZoomLevel={8} />
+        <Mapbox.ShapeSource
+          id="holidayPinsSource"
+          shape={holidayFeatureCollection}
+          onPress={onPinPress}
+        >
+          <Mapbox.SymbolLayer
+            id="holidayPinsLayer"
+            style={customStyles.holidayPinsLayer}
+            maxZoomLevel={8}
+          />
           {renderHolidayPopups()}
         </Mapbox.ShapeSource>
       </Mapbox.MapView>
+      {moreInfo && bottomSheet}
     </View>
   );
 };
