@@ -1,82 +1,86 @@
 import React, { useCallback, useState, useMemo, useRef, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import BottomSheet, { BottomSheetView, BottomSheetScrollView} from "@gorhom/bottom-sheet";
-import Animated, {
-  useAnimatedStyle,
-  interpolateColor,
-  interpolate,
-} from "react-native-reanimated";
+import BottomSheet, { BottomSheetView, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import Animated, { useAnimatedStyle, interpolateColor, interpolate } from "react-native-reanimated";
 
 import { Button, Card, IconButton, Text } from "react-native-paper";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import "../assets/airplane-icon-png-2506.png"
+import "../assets/airplane-icon-png-2506.png";
 
 import SheetMemory from "./SheetMemory";
 import BottomModal from "./Bottom-Sheet/BottomModal";
 
-const ActionSheet = ({camera, setModalOpen, setMoreInfo, sheetData, memories, setCoordinates}) => {
+const ActionSheet = ({
+  camera,
+  setModalOpen,
+  setMoreInfo,
+  sheetData,
+  memories,
+  setCoordinates,
+  setZoom,
+  adjustCamera,
+}) => {
   const bottomSheetRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
-  const [isLoading, setIsLoading] = useState(true)
-  const [loadData, setLoadData] = useState()
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadData, setLoadData] = useState();
+
   const snapPoints = useMemo(() => ["10%", "30%", "50%", "75%", "100%"], []);
 
   const handleZoom = () => {
-    camera.zoomTo(7)
-  }
+    camera.zoomTo(7);
+  };
 
   const handleGoTo = () => {
-    camera.flyTo(sheetData.geometry.coordinates)
-    setIsOpen(false)
-    setMoreInfo(false)
+    adjustCamera(sheetData.geometry.coordinates, 7);
+
+    setIsOpen(false);
+    setMoreInfo(false);
   };
 
   handleEditButton = () => {
-    setModalOpen("edit")
-  }
+    setModalOpen("edit");
+  };
 
 
-  const handleCloseSheet = () =>{
-    setIsOpen(false)
-    setMoreInfo(false)
-  }
+  const handleCloseSheet = () => {
+    setIsOpen(false);
+    setMoreInfo(false);
+  };
 
-  useEffect(()=>{
-    if (!sheetData){
-      setIsLoading(true)
+
+  useEffect(() => {
+    if (!sheetData) {
+      setIsLoading(true);
     } else {
-      setLoadData(sheetData.properties)
-      setIsLoading(false)
+      setLoadData(sheetData.properties);
+      setIsLoading(false);
     }
-  }, [sheetData])
+  }, [sheetData]);
 
   const CustomBackground = ({ style, animatedIndex }) => {
     //#region styles
     const containerAnimatedStyle = useAnimatedStyle(() => ({
-      backgroundColor: interpolateColor(
-        animatedIndex.value,
-        [0, 3],
-        ["#FFFFFF", "#a8b5eb"]
-      ),
+      backgroundColor: interpolateColor(animatedIndex.value, [0, 3], ["#FFFFFF", "#a8b5eb"]),
       borderRadius: interpolate(animatedIndex.value, [0, 0.9], [0, 80]),
     }));
-    
-    const containerStyle = useMemo(
-      () => [style, containerAnimatedStyle],
-      [style, containerAnimatedStyle]
-    );
+
+    const containerStyle = useMemo(() => [style, containerAnimatedStyle], [style, containerAnimatedStyle]);
     //#endregion
     // render
     return <Animated.View pointerEvents="none" style={containerStyle} />;
   };
 
-
-
   return (
     <>
-      <BottomSheet backgroundComponent={CustomBackground} enablePanDownToClose ref={bottomSheetRef} index={isOpen ? 1 : -1} snapPoints={snapPoints} onClose={handleCloseSheet}>
-        
+      <BottomSheet
+        backgroundComponent={CustomBackground}
+        enablePanDownToClose
+        ref={bottomSheetRef}
+        index={isOpen ? 1 : -1}
+        snapPoints={snapPoints}
+        onClose={handleCloseSheet}
+      >
         <BottomSheetView style={styles.contentContainer}>
         {isLoading ? (
           <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
@@ -107,13 +111,12 @@ const ActionSheet = ({camera, setModalOpen, setMoreInfo, sheetData, memories, se
           </View>
         </ScrollView>
         </>)}
+
         </BottomSheetView>
       </BottomSheet>
     </>
   );
 };
-
-
 
 const styles = StyleSheet.create({
   container: {
