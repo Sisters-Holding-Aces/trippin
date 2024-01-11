@@ -42,12 +42,10 @@ const ActionSheet = ({
     setModalOpen("edit");
   };
 
-
   const handleCloseSheet = () => {
     setIsOpen(false);
     setMoreInfo(false);
   };
-
 
   useEffect(() => {
     if (!sheetData) {
@@ -82,36 +80,66 @@ const ActionSheet = ({
         onClose={handleCloseSheet}
       >
         <BottomSheetView style={styles.contentContainer}>
-        {isLoading ? (
-          <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
-        ) :
-        (
-          <>
-        <Card style={{width: "70%", height: "35%", alignItems: "center"}}>
-        <Card.Content>
-          <Text style={{alignSelf: "center"}} variant="labelLarge">{loadData.title}</Text>
-        </Card.Content>
-        <Card.Cover style={{backgroundColor: "clear", maxHeight: "50%", overflow: "hidden"}} resizeMode="contain" source={{ uri: 'https://cdn-icons-png.flaticon.com/512/562/562740.png' }} />
-        <Card.Actions style={{margin: 0, borderWidth: 0, padding: 0}} >
-          <View style={{flex: 1, flexDirection: "row", justifyContent: "center", overflow: "visible"}}>
-            {loadData.popupType === "holiday" ? <Button mode="text" onPressIn={()=>handleEditButton()}>Options</Button> : null}
-            <Button mode="text" onPressIn={()=>handleGoTo("holiday")} >Go to</Button>
-          </View>
-        </Card.Actions>
-      </Card>
-      <Text style={{alignSelf: "center", textAlign: "center", color: "white", padding: 5}} >{loadData.description}</Text>
-      {loadData.popupType === "holiday" ? <Text style={{alignSelf: "center"}} variant="headlineSmall">Memories</Text> : <Text style={{alignSelf: "center", textAlign: "center"}} variant="headlineSmall">{loadData.description ? null : "Add a description!"}</Text>}
-      <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{height: "100%", flex: 1}}>
-          <View style={{marginBottom: "10%"}}>
-            {memories.map((memory, index)=>{
-              if(memory.holidayReference === loadData.id){
-                return <SheetMemory key={index} handleCloseSheet={handleCloseSheet} camera={camera} setCoordinates={setCoordinates} memory={memory} />
-              }
-            })}
-          </View>
-        </ScrollView>
-        </>)}
-
+          {isLoading ? (
+            <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
+          ) : (
+            <>
+              <Card style={{ width: "70%", height: "35%", alignItems: "center" }}>
+                <Card.Content>
+                  <Text style={{ alignSelf: "center" }} variant="labelLarge">
+                    {loadData.title}
+                  </Text>
+                </Card.Content>
+                <Card.Cover
+                  style={{ backgroundColor: "clear", maxHeight: "50%", overflow: "hidden" }}
+                  resizeMode="contain"
+                  source={{ uri: "https://cdn-icons-png.flaticon.com/512/562/562740.png" }}
+                />
+                <Card.Actions style={{ margin: 0, borderWidth: 0, padding: 0 }}>
+                  <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", overflow: "visible" }}>
+                    {loadData.popupType === "holiday" ? (
+                      <Button mode="text" onPressIn={() => handleEditButton()}>
+                        Options
+                      </Button>
+                    ) : null}
+                    <Button mode="text" onPressIn={() => handleGoTo("holiday")}>
+                      Go to
+                    </Button>
+                  </View>
+                </Card.Actions>
+              </Card>
+              <Text style={{ alignSelf: "center", textAlign: "center", color: "white", padding: 5 }}>
+                {loadData.description}
+              </Text>
+              {loadData.popupType === "holiday" ? (
+                <Text style={{ alignSelf: "center" }} variant="headlineSmall">
+                  Memories
+                </Text>
+              ) : (
+                <Text style={{ alignSelf: "center", textAlign: "center" }} variant="headlineSmall">
+                  {loadData.description ? null : "Add a description!"}
+                </Text>
+              )}
+              <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{ height: "100%", flex: 1 }}>
+                <View style={{ marginBottom: "10%" }}>
+                  {memories.map((memory, index) => {
+                    if (memory.holidayReference === loadData.id) {
+                      return (
+                        <SheetMemory
+                          key={index}
+                          handleCloseSheet={handleCloseSheet}
+                          camera={camera}
+                          setCoordinates={setCoordinates}
+                          memory={memory}
+                          adjustCamera={adjustCamera}
+                        />
+                      );
+                    }
+                  })}
+                </View>
+              </ScrollView>
+            </>
+          )}
         </BottomSheetView>
       </BottomSheet>
     </>
