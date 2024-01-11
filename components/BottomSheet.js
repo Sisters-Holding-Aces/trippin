@@ -22,10 +22,12 @@ const ActionSheet = ({camera, setModalOpen, setMoreInfo, sheetData, memories, se
   
   const snapPoints = useMemo(() => ["10%", "30%", "50%", "75%", "100%"], []);
 
-  const handleGoTo = () => {
-    console.log(sheetData, "sheetdata")
-    setCoordinates(sheetData.geometry.coordinates)
+  const handleZoom = () => {
     camera.zoomTo(7)
+  }
+
+  const handleGoTo = () => {
+    camera.flyTo(sheetData.geometry.coordinates)
     setIsOpen(false)
     setMoreInfo(false)
   };
@@ -93,7 +95,8 @@ const ActionSheet = ({camera, setModalOpen, setMoreInfo, sheetData, memories, se
           </View>
         </Card.Actions>
       </Card>
-      <Text style={{alignSelf: "center"}} variant="headlineLarge">Memories</Text>
+      <Text style={{alignSelf: "center", textAlign: "center", color: "white", padding: 5}} >{loadData.description}</Text>
+      <Text style={{alignSelf: "center"}} variant="headlineSmall">Memories</Text>
       <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{height: "100%", flex: 1}}>
           <View style={{marginBottom: "10%"}}>
             {memories.map((memory, index)=>{

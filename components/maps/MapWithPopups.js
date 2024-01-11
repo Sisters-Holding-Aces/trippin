@@ -112,7 +112,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
   }, [moreInfo]);
 
   useEffect(() => {
-    console.log(coordinates, "map");
+    console.log(coordinates, "map coords");
   }, [coordinates]);
 
   useEffect(() => {

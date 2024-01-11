@@ -8,12 +8,16 @@ export default function SheetMemory({ handleCloseSheet, camera, memory, setCoord
     camera.zoomTo(12)
   }
 
+  const handleAll = () => {
+    handleGoTo().then(()=>{
+      setTimeout(handleZoom(), 100)
+    })
+  }
+
   const handleGoTo = () => {
     const coordinates = memory.locationData
-    setCoordinates([coordinates.longitude, coordinates.latitude])
-    handleZoom()
-    console.log(camera, "camera")
     handleCloseSheet()
+    return new Promise(()=>{setCoordinates([coordinates.longitude, coordinates.latitude])})
   };
 
     return (
@@ -24,7 +28,7 @@ export default function SheetMemory({ handleCloseSheet, camera, memory, setCoord
         </Card.Content>
         <Card.Actions style={{paddingRight: 20}}>
           <View style={{flex: 1, flexDirection: "row", justifyContent: "center"}}>
-            <Button mode="text" onPressIn={()=>handleGoTo()} >Go to</Button>
+            <Button mode="text" onPressIn={()=>handleAll()} >Go to</Button>
           </View>
         </Card.Actions>
       </Card>
