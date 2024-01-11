@@ -33,6 +33,9 @@ export default function HolidayCard({ user , sheetData}) {
  const [memoryToBeDelete, setMemoryToBeDelete] = useState("");
 
  useEffect(() => {
+  if(!user){
+    return undefined
+  }
      getUserInfo(user.displayName).then((res) => {
        setUserId(res.id);
        holidayById(res.id, holiday.id).then((res) => {
@@ -103,7 +106,7 @@ memories...</Text>
          </Card.Actions>
        </Card> : 
        <>
-       <Text>Holiday has been deleted!</Text>
+       {user ? <Text variant="displayMedium" style={{alignSelf: "center", textAlign: "center"}}>Holiday has been deleted!</Text> : <Text variant="displayMedium" style={{alignSelf: "center", textAlign: "center"}} >Log-in to see options</Text>}
        </>}
       
        {holiday ? <Portal>

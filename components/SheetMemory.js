@@ -2,11 +2,18 @@ import { View } from "react-native"
 import { Card, Button } from "react-native-paper"
 import { Text } from "react-native-paper"
 
-export default function SheetMemory({ memory, setCoordinates}){
+export default function SheetMemory({ handleCloseSheet, camera, memory, setCoordinates}){
+
+  const handleZoom = () => {
+    camera.zoomTo(12)
+  }
 
   const handleGoTo = () => {
     const coordinates = memory.locationData
     setCoordinates([coordinates.longitude, coordinates.latitude])
+    handleZoom()
+    console.log(camera, "camera")
+    handleCloseSheet()
   };
 
     return (

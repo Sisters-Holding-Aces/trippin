@@ -106,6 +106,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
         memories={memories}
         sheetData={sheetData}
         setMoreInfo={setMoreInfo}
+        camera={camera.current}
       />
     );
   }, [moreInfo]);
