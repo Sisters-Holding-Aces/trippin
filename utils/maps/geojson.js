@@ -35,7 +35,7 @@ export const memoriesGeoJsonFromData = (memories) => {
             popupType: "memory",
             id: memory.id,
             title: memory.title,
-            description: memory.info,
+            description: memory.note,
             date: memory.date,
             holidayRef: memory.holidayReference
           },

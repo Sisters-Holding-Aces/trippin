@@ -48,11 +48,11 @@ export default function HolidayCard({ user, sheetData }) {
 
     memoriesByHoliday(userId, holiday.id)
       .then((res) => {
+        console.log("i")
         setAllMemories(res);
-        console.log(allMemories)
       })
       .catch(() => {});
-  }, [holiday]);
+  }, []);
 
   useEffect(() => {
     setNewMemoryTitle(memoryToBeEdit.title);

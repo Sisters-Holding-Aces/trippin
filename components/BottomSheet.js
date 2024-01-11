@@ -69,6 +69,8 @@ const ActionSheet = ({
     return <Animated.View pointerEvents="none" style={containerStyle} />;
   };
 
+  console.log(sheetData, "load")
+
   return (
     <>
       <BottomSheet
@@ -109,7 +111,7 @@ const ActionSheet = ({
                 </Card.Actions>
               </Card>
               <Text style={{ alignSelf: "center", textAlign: "center", color: "white", padding: 5 }}>
-                {loadData.description}
+                {loadData.popupType === "holiday" ? loadData.description : null}
               </Text>
               {loadData.popupType === "holiday" ? (
                 <Text style={{ alignSelf: "center" }} variant="headlineSmall">
@@ -117,7 +119,7 @@ const ActionSheet = ({
                 </Text>
               ) : (
                 <Text style={{ alignSelf: "center", textAlign: "center" }} variant="headlineSmall">
-                  {loadData.description ? null : "Add a description!"}
+                  {loadData.description ? loadData.description : "Add a description!"}
                 </Text>
               )}
               <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{ height: "100%", flex: 1 }}>

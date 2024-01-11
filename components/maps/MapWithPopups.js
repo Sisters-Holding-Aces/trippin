@@ -47,6 +47,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
     setSheetData(feature);
+    console.log(feature.properties, "here")
 
     // centers the selected pin on the screen
     setCoordinates(feature.geometry.coordinates);
