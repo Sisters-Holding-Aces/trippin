@@ -14,7 +14,7 @@ import "../assets/airplane-icon-png-2506.png"
 import SheetMemory from "./SheetMemory";
 import BottomModal from "./Bottom-Sheet/BottomModal";
 
-const ActionSheet = ({setModalOpen, setMoreInfo, sheetData, memories, setCoordinates}) => {
+const ActionSheet = ({camera, setModalOpen, setMoreInfo, sheetData, memories, setCoordinates}) => {
   const bottomSheetRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true)
@@ -23,7 +23,11 @@ const ActionSheet = ({setModalOpen, setMoreInfo, sheetData, memories, setCoordin
   const snapPoints = useMemo(() => ["10%", "30%", "50%", "75%", "100%"], []);
 
   const handleGoTo = () => {
+    console.log(sheetData, "sheetdata")
     setCoordinates(sheetData.geometry.coordinates)
+    camera.zoomTo(7)
+    setIsOpen(false)
+    setMoreInfo(false)
   };
 
   handleEditButton = () => {
@@ -84,19 +88,17 @@ const ActionSheet = ({setModalOpen, setMoreInfo, sheetData, memories, setCoordin
         <Card.Cover style={{backgroundColor: "clear", maxHeight: "50%", overflow: "hidden"}} resizeMode="contain" source={{ uri: 'https://cdn-icons-png.flaticon.com/512/562/562740.png' }} />
         <Card.Actions style={{margin: 0, borderWidth: 0, padding: 0}} >
           <View style={{flex: 1, flexDirection: "row", justifyContent: "center", overflow: "visible"}}>
-            <Button mode="text" onPressIn={()=>handleEditButton()}>Edit</Button>
-            <Button mode="text">Share</Button>
-            <Button mode="text">Delete</Button>
-            <Button mode="text" onPressIn={()=>handleGoTo()} >Go to</Button>
+            <Button mode="text" onPressIn={()=>handleEditButton()}>Options</Button>
+            <Button mode="text" onPressIn={()=>handleGoTo("holiday")} >Go to</Button>
           </View>
         </Card.Actions>
       </Card>
       <Text style={{alignSelf: "center"}} variant="headlineLarge">Memories</Text>
       <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{height: "100%", flex: 1}}>
           <View style={{marginBottom: "10%"}}>
-            {memories.map((memory)=>{
+            {memories.map((memory, index)=>{
               if(memory.holidayReference === loadData.id){
-                return <SheetMemory setCoordinates={setCoordinates} memory={memory} />
+                return <SheetMemory key={index} handleCloseSheet={handleCloseSheet} camera={camera} setCoordinates={setCoordinates} memory={memory} />
               }
             })}
           </View>

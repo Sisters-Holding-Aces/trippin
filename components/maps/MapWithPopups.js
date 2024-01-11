@@ -106,6 +106,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
         memories={memories}
         sheetData={sheetData}
         setMoreInfo={setMoreInfo}
+        camera={camera.current}
       />
     );
   }, [moreInfo]);
@@ -187,7 +188,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
 
         {moreInfo && bottomSheet}
       </View>
-      {modalOpen && <BottomModal user={user} setModalOpen={setModalOpen} />}
+      {modalOpen && <BottomModal sheetData={sheetData} user={user} setModalOpen={setModalOpen} modalOpen={modalOpen} />}
     </>
   );
 };
