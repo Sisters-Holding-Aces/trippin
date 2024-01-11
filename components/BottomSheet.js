@@ -44,7 +44,6 @@ const ActionSheet = ({camera, setModalOpen, setMoreInfo, sheetData, memories, se
   useEffect(()=>{
     if (!sheetData){
       setIsLoading(true)
-      console.log("loading")
     } else {
       setLoadData(sheetData.properties)
       setIsLoading(false)

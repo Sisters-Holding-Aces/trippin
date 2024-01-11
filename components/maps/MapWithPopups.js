@@ -112,10 +112,6 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
   }, [moreInfo]);
 
   useEffect(() => {
-    console.log(coordinates, "map coords");
-  }, [coordinates]);
-
-  useEffect(() => {
     if (!holidays.length) {
       setCoordinates([13.4317618, 52.4827483]);
     }
