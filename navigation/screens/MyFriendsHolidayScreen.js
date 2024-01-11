@@ -47,7 +47,7 @@ export default function MyFriendsHolidayScreen() {
           }}
           style={styles.search}
           autoCapitalize="none"
-          placeholder="Holiday's link"
+          placeholder="Enter holiday link here"
           onChangeText={setHolidayLink}
           value={holidayLink}
         />
