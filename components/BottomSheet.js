@@ -84,9 +84,7 @@ const ActionSheet = ({setModalOpen, setMoreInfo, sheetData, memories, setCoordin
         <Card.Cover style={{backgroundColor: "clear", maxHeight: "50%", overflow: "hidden"}} resizeMode="contain" source={{ uri: 'https://cdn-icons-png.flaticon.com/512/562/562740.png' }} />
         <Card.Actions style={{margin: 0, borderWidth: 0, padding: 0}} >
           <View style={{flex: 1, flexDirection: "row", justifyContent: "center", overflow: "visible"}}>
-            <Button mode="text" onPressIn={()=>handleEditButton()}>Edit</Button>
-            <Button mode="text">Share</Button>
-            <Button mode="text">Delete</Button>
+            <Button mode="text" onPressIn={()=>handleEditButton()}>Options</Button>
             <Button mode="text" onPressIn={()=>handleGoTo()} >Go to</Button>
           </View>
         </Card.Actions>
@@ -94,9 +92,9 @@ const ActionSheet = ({setModalOpen, setMoreInfo, sheetData, memories, setCoordin
       <Text style={{alignSelf: "center"}} variant="headlineLarge">Memories</Text>
       <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{height: "100%", flex: 1}}>
           <View style={{marginBottom: "10%"}}>
-            {memories.map((memory)=>{
+            {memories.map((memory, index)=>{
               if(memory.holidayReference === loadData.id){
-                return <SheetMemory setCoordinates={setCoordinates} memory={memory} />
+                return <SheetMemory key={index} setCoordinates={setCoordinates} memory={memory} />
               }
             })}
           </View>

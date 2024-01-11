@@ -3,12 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 import BottomSheet from "@gorhom/bottom-sheet";
 import CustomBackdrop from "./BackdropComp";
 import AllHolidaysScreen from "../../navigation/screens/AllHolidaysScreen"
+import EditHoliday from "./EditHoliday";
 
-const BottomModal = ({ setModalOpen, user }) => {
-  // ref
+const BottomModal = ({ modalOpen, setModalOpen, user, sheetData }) => {
+ 
   const bottomSheetRef = useRef(null);
 
-  // variables
+  
   const snapPoints = useMemo(() => ["25%"], []);
 
   const handleClose = () => {
@@ -16,15 +17,15 @@ const BottomModal = ({ setModalOpen, user }) => {
   }
 
 
-  // renders
+
   return (
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
-        // add bottom inset to elevate the sheet
+       
         bottomInset={100}
         topInset={-1200}
-        // set `detached` to true
+        
         detached={true}
         style={styles.sheetContainer}
         enablePanDownToClose
@@ -33,7 +34,7 @@ const BottomModal = ({ setModalOpen, user }) => {
         containerStyle={{height: 1700, paddingBottom: 100}}
       >
 
-          <AllHolidaysScreen user={user} />
+          <EditHoliday sheetData={sheetData} user={user} />
         
       </BottomSheet>
   );
@@ -46,9 +47,9 @@ const styles = StyleSheet.create({
     backgroundColor: "grey",
   },
   sheetContainer: {
-    // add horizontal space
+    
     borderRadius: 20,
-    marginHorizontal: 40,
+    marginHorizontal: 15,
     backgroundColor: "grey",
     shadowOffset: {
         width: 10,
