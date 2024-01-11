@@ -2,28 +2,32 @@ import { StyleSheet, View } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import markerHoliday from "../../assets/marker-holiday.png";
 import markerMemory from "../../assets/marker-memory.png";
+import markerPlaneRound from "../../assets/marker-airplane-round.png";
 import Mapbox from "@rnmapbox/maps";
 import HolidayPopup from "./HolidayPopup";
 import MemoryPopup from "./MemoryPopup";
-import {
-  holidaysGeoJsonFromData,
-  memoriesGeoJsonFromData,
-} from "../../utils/maps/geojson";
+import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/maps/geojson";
 import ActionSheet from "../BottomSheet";
 import BottomModal from "../Bottom-Sheet/BottomModal";
+import NewPinAdder from "./NewPinAdder";
 
 Mapbox.setAccessToken(
   process.env.MAPBOX_PUBLIC_API_KEY ||
     "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
 );
 
-const MapWithPopups = ({ holidays, memories, user}) => {
+const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user}) => {
+  const [holidays, setHolidays] = useState(mapHolidays);
+  const [memories, setMemories] = useState(mapMemories);
   const [selectedHoliday, setSelectedHoliday] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [moreInfo, setMoreInfo] = useState(false);
   const [bottomSheet, setBottomSheet] = useState();
   const [sheetData, setSheetData] = useState();
   const [modalOpen, setModalOpen] = useState(null)
+
+  // determines whether the new pin overlay is shown
+  const [addPinMode, setAddPinMode] = useState(false);
 
   const mapView = useRef(null);
   const camera = useRef(null);
@@ -33,16 +37,9 @@ const MapWithPopups = ({ holidays, memories, user}) => {
     holidays[0].locationData.latitude,
   ]);
 
-  const holidayFeatureCollection = useMemo(
-    () => holidaysGeoJsonFromData(holidays),
-    [holidays]
-  );
+  const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
-  const memoryFeatureCollection = useMemo(
-    () => memoriesGeoJsonFromData(memories),
-    [memories]
-  );
-
+  const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
 
   const onPinPress = async (e) => {
     // gets the geojson feature at the pin
@@ -67,6 +64,10 @@ const MapWithPopups = ({ holidays, memories, user}) => {
         setSelectedMemory(id);
       }
     }
+  };
+
+  const toggleAddPinMode = () => {
+    setAddPinMode((m) => !m);
   };
 
   const renderMemoryPopups = () => {
@@ -129,42 +130,51 @@ const MapWithPopups = ({ holidays, memories, user}) => {
         projection="mercator"
         rotateEnabled={true}
       >
-        <Mapbox.Camera
-          centerCoordinate={coordinates}
-          animationDuration={700}
-          ref={camera}
+        <Mapbox.Camera centerCoordinate={coordinates} animationDuration={700} ref={camera} minZoomLevel={2} />
+
+        <Mapbox.Images
+          images={{
+            markerHoliday,
+            markerMemory,
+            markerPlaneRound,
+          }}
         />
 
-        <Mapbox.Images images={{ markerHoliday, markerMemory }} />
+        {/* an overlay that appears when 'Add Pin' mode is ON */}
+        {addPinMode && (
+          <Mapbox.BackgroundLayer
+            id="editBackgroundLayer"
+            style={{ backgroundColor: "#93B7B4", backgroundOpacity: 0.2 }}
+          />
+        )}
 
         {/* memories layer */}
-        <Mapbox.ShapeSource
-          id="memoryPinsSource"
-          shape={memoryFeatureCollection}
-          onPress={onPinPress}
-        >
-          <Mapbox.SymbolLayer
-            id="memoryPinsLayer"
-            style={customStyles.memoryPinsLayer}
-            minZoomLevel={8}
-          />
+        <Mapbox.ShapeSource id="memoryPinsSource" shape={memoryFeatureCollection} onPress={onPinPress}>
+          <Mapbox.SymbolLayer id="memoryPinsLayer" style={customStyles.memoryPinsLayer} minZoomLevel={8} />
           {renderMemoryPopups()}
         </Mapbox.ShapeSource>
 
         {/* holidays layer: rendered above and after the memories layer */}
-        <Mapbox.ShapeSource
-          id="holidayPinsSource"
-          shape={holidayFeatureCollection}
-          onPress={onPinPress}
-        >
-          <Mapbox.SymbolLayer
-            id="holidayPinsLayer"
-            style={customStyles.holidayPinsLayer}
-            maxZoomLevel={8}
-          />
+        <Mapbox.ShapeSource id="holidayPinsSource" shape={holidayFeatureCollection} onPress={onPinPress}>
+          <Mapbox.SymbolLayer id="holidayPinsLayer" style={customStyles.holidayPinsLayer} maxZoomLevel={8} />
           {renderHolidayPopups()}
         </Mapbox.ShapeSource>
       </Mapbox.MapView>
+
+      {userId && isEditable ? (
+        <NewPinAdder
+          addPinMode={addPinMode}
+          toggleAddPinMode={toggleAddPinMode}
+          holidays={holidays}
+          setHolidays={setHolidays}
+          setMemories={setMemories}
+          mapViewRef={mapView.current}
+          userId={userId}
+        />
+      ) : (
+        ""
+      )}
+
       {moreInfo && bottomSheet}
     </View>
     {modalOpen && (<BottomModal user={user} setModalOpen={setModalOpen} />)}
@@ -175,15 +185,11 @@ const MapWithPopups = ({ holidays, memories, user}) => {
 export default MapWithPopups;
 
 const customStyles = {
-  callout: {
-    borderRadius: 5,
-    padding: 10,
-  },
   holidayPinsLayer: {
     iconAllowOverlap: true,
     iconAnchor: "bottom",
-    iconSize: 1.0,
-    iconImage: "markerHoliday",
+    iconSize: ["interpolate", ["linear"], ["zoom"], 0, 0.4, 3, 0.5, 5, 0.6],
+    iconImage: "markerPlaneRound",
   },
   memoryPinsLayer: {
     iconAllowOverlap: true,
