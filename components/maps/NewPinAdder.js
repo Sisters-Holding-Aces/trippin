@@ -14,7 +14,7 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, holidays, setHolidays, setM
 
   // determines what is being edited - 'holiday', or 'memory'
   const [editMode, setEditMode] = useState(null);
-  console.log("Choosing to edit:", editMode);
+  
 
   const newLocation = useRef(null);
 
@@ -37,7 +37,7 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, holidays, setHolidays, setM
     if (editMode === "holiday") {
       setAddHolidayFormOpen(true);
     } else if (editMode === "memory") {
-      console.log("adding a new memory");
+      
       setAddMemoryFormOpen(true);
     }
     toggleAddPinMode();
@@ -52,7 +52,7 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, holidays, setHolidays, setM
   };
 
   const onAddMemory = async (newTitle, selectedHoliday) => {
-    console.log("Adding new memory to holiday:", selectedHoliday);
+    
     const newMemory = await addMemory(userId, selectedHoliday, newTitle, newLocation.current);
 
     setMemories((currMemories) => [newMemory, ...currMemories]);

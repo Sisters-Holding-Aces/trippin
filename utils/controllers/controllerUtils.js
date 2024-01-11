@@ -37,7 +37,7 @@ export const dateValidator = async (input) => {
     if (typeof iso.nanoseconds === 'number' && typeof iso.seconds === 'number' &&
         iso.nanoseconds !== 'NaN' && iso.seconds !== 'NaN'
         ) {
-        console.log(typeof iso.nanoseconds, iso)
+        
         return true
     } else return false
 }

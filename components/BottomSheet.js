@@ -27,6 +27,10 @@ const ActionSheet = ({
 
   const snapPoints = useMemo(() => ["10%", "30%", "50%", "75%", "100%"], []);
 
+  const handleZoom = () => {
+    camera.zoomTo(7);
+  };
+
   const handleGoTo = () => {
     adjustCamera(sheetData.geometry.coordinates, 7);
 
@@ -46,7 +50,6 @@ const ActionSheet = ({
   useEffect(() => {
     if (!sheetData) {
       setIsLoading(true);
-      console.log("loading");
     } else {
       setLoadData(sheetData.properties);
       setIsLoading(false);
@@ -103,7 +106,10 @@ const ActionSheet = ({
                   </View>
                 </Card.Actions>
               </Card>
-              <Text style={{ alignSelf: "center" }} variant="headlineLarge">
+              <Text style={{ alignSelf: "center", textAlign: "center", color: "white", padding: 5 }}>
+                {loadData.description}
+              </Text>
+              <Text style={{ alignSelf: "center" }} variant="headlineSmall">
                 Memories
               </Text>
               <ScrollView nestedScrollEnabled={true} scrollEnabled={true} style={{ height: "100%", flex: 1 }}>

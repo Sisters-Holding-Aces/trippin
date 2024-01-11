@@ -7,6 +7,12 @@ export default function SheetMemory({ handleCloseSheet, camera, memory, setCoord
     camera.zoomTo(12);
   };
 
+  const handleAll = () => {
+    handleGoTo().then(() => {
+      setTimeout(handleZoom(), 100);
+    });
+  };
+
   const handleGoTo = () => {
     const coordinates = [memory.locationData.longitude, memory.locationData.latitude];
     adjustCamera(coordinates, 16);

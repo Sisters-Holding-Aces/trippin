@@ -107,7 +107,6 @@ const AddMemoryForm = ({ newLocation, exitEditMode, handleAddMemory, setAdding, 
         <Dialog.Actions>
           <Button
             onPress={() => {
-              console.log("Cancelling: add memory");
               handleDismiss();
             }}
           >
@@ -116,7 +115,6 @@ const AddMemoryForm = ({ newLocation, exitEditMode, handleAddMemory, setAdding, 
           <Button
             mode="contained"
             onPress={() => {
-              console.log("Submitting: add memory");
               setAdding(true);
               handleAddMemory(titleInput, selectedHoliday);
               handleDismiss();

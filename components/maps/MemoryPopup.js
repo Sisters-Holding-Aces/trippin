@@ -13,7 +13,6 @@ const MemoryPopup = ({ memory, isSelected, setSelectedMemory, setMoreInfo }) => 
   };
 
   const handleSeeMore = () => {
-    console.log("see more")
     setMoreInfo(true)
   }
 

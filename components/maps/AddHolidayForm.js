@@ -36,7 +36,6 @@ const AddHolidayForm = ({ newLocation, exitEditMode, handleAddHoliday, setAdding
       <Dialog.Actions>
         <Button
           onPress={() => {
-            console.log("Cancelling: add holiday");
             handleDismiss();
           }}
         >
@@ -45,7 +44,6 @@ const AddHolidayForm = ({ newLocation, exitEditMode, handleAddHoliday, setAdding
         <Button
           mode="contained"
           onPress={() => {
-            console.log("Submitting: add holiday");
             setAdding(true);
             handleAddHoliday(titleInput);
             handleDismiss();
