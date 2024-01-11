@@ -1,7 +1,8 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
 import MainContainer from "./navigation/MainContainer";
-import { StyleSheet, View, Platform, StatusBar } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { registerRootComponent } from "expo";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
@@ -32,11 +33,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.AndroidSafeArea}>
         <PaperProvider>
-          <MainContainer
-            user={user}
-            setUser={setUser}
-            setUserLoggedIn={setUserLoggedIn}
-          />
+          <MainContainer user={user} setUser={setUser} setUserLoggedIn={setUserLoggedIn} />
         </PaperProvider>
       </SafeAreaView>
     </GestureHandlerRootView>
