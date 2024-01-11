@@ -36,6 +36,8 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
     holidays.length ? [holidays[0].locationData.longitude, holidays[0].locationData.latitude] : [13.4317618, 52.4827483]
   );
 
+  const [zoom, setZoom] = useState(4);
+
   const holidayFeatureCollection = useMemo(() => holidaysGeoJsonFromData(holidays), [holidays]);
 
   const memoryFeatureCollection = useMemo(() => memoriesGeoJsonFromData(memories), [memories]);
@@ -48,6 +50,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
 
     // centers the selected pin on the screen
     setCoordinates(feature.geometry.coordinates);
+    // camera.current.flyTo(feature.geometry.coordinates);
 
     // sets selected holiday/memory
     if (popupType === "holiday") {
@@ -67,6 +70,13 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
 
   const toggleAddPinMode = () => {
     setAddPinMode((m) => !m);
+  };
+
+  const adjustCamera = async (newCoordinates, newZoom) => {
+    camera.current.setCamera({
+      centerCoordinate: newCoordinates,
+      zoomLevel: newZoom,
+    });
   };
 
   const renderMemoryPopups = () => {
@@ -102,7 +112,9 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
       <ActionSheet
         setModalOpen={setModalOpen}
         moreInfo={moreInfo}
+        adjustCamera={adjustCamera}
         setCoordinates={setCoordinates}
+        setZoom={setZoom}
         memories={memories}
         sheetData={sheetData}
         setMoreInfo={setMoreInfo}
@@ -112,14 +124,24 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
   }, [moreInfo]);
 
   useEffect(() => {
-    console.log(coordinates, "map");
-  }, [coordinates]);
-
-  useEffect(() => {
     if (!holidays.length) {
       setCoordinates([13.4317618, 52.4827483]);
     }
   }, [holidays]);
+
+  useEffect(() => {
+    camera.current?.zoomTo(zoom);
+  }, [zoom]);
+
+  useEffect(() => {
+    camera.current?.flyTo(coordinates);
+  }, [coordinates]);
+
+  // useEffect(() => {
+  //   if ((selectedHoliday === null) | (selectedMemory === null)) {
+  //     mapView.current.getCenter().then((center) => setCoordinates(center));
+  //   }
+  // }, [selectedHoliday, selectedMemory]);
 
   return (
     <>
