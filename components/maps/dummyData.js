@@ -20,7 +20,7 @@ const memories = [
     title: "Park",
     locationData: { longitude: 13.353087951539997, latitude: 52.51339022910384 },
     date: "2021-01-03T23:59:01.000Z",
-    info: "Had a lovely walk in this beautiful park.",
+    note: "Had a lovely walk in this beautiful park.",
     id: "001",
     holidayReference: "001"
   },
@@ -28,23 +28,23 @@ const memories = [
     title: "Wall",
     locationData: { longitude: 13.44111, latitude: 52.50444 },
     date: "2021-01-06T23:01:01.000Z",
-    info: "It's lovely!",
+    note: "It's lovely!",
     id: "002",
     holidayReference: "001"
   },
   {
-    title: "Boating Lake:",
+    title: "Boating Lake",
     locationData: { longitude: -2.9364495277404785, latitude: 53.38420486450195 },
     date: "2022-04-06T23:01:01.000Z",
-    info: "A relaxing walk around the lake.",
+    note: "A relaxing walk around the lake.",
     id: "003",
     holidayReference: "002"
   },
   {
-    title: "Museum:",
+    title: "Museum",
     locationData: { longitude: -2.9955708980560303, latitude: 53.402976989746094 },
     date: "2022-04-07T23:01:01.000Z",
-    info: "It's lovely!",
+    note: "It's lovely!",
     id: "004",
     holidayReference: "002"
   },
