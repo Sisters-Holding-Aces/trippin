@@ -25,15 +25,9 @@ export default function MyFriendsHolidayScreen() {
     <PaperProvider>
       <View style={styles.container}>
         {isLoading ? (
-          <ActivityIndicator
-            animating={true}
-            color={MD2Colors.blueGrey100}
-            size={"large"}
-          />
+          <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
         ) : (
-          <MapWithPopups holidays={holidays} memories={memories} 
-          isEditable={false}
-          />
+          <MapWithPopups mapHolidays={holidays} mapMemories={memories} isEditable={false} />
         )}
         <Searchbar
           onIconPress={() => {
@@ -43,8 +37,8 @@ export default function MyFriendsHolidayScreen() {
                 setErr(true);
                 setIsLoading(false);
               } else {
-                const justHolidayData = {...res}
-                delete justHolidayData.memories
+                const justHolidayData = { ...res };
+                delete justHolidayData.memories;
                 setHolidays([justHolidayData]);
                 setMemories(res.memories);
                 setIsLoading(false);
@@ -52,7 +46,7 @@ export default function MyFriendsHolidayScreen() {
             });
           }}
           style={styles.search}
-          autoCapitalize = "none"
+          autoCapitalize="none"
           placeholder="Holiday's link"
           onChangeText={setHolidayLink}
           value={holidayLink}
