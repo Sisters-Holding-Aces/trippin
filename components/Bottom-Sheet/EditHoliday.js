@@ -32,9 +32,9 @@ export default function HolidayCard({ user, sheetData }) {
   const [memoryToBeDelete, setMemoryToBeDelete] = useState("");
 
   useEffect(() => {
-    if(!user){
-        return undefined
-       }
+    if (!user) {
+      return undefined;
+    }
     getUserInfo(user.displayName).then((res) => {
       setUserId(res.id);
       holidayById(res.id, holiday.id)
@@ -44,15 +44,13 @@ export default function HolidayCard({ user, sheetData }) {
           setNewHolidayInfo(res.info);
         })
         .catch((res) => {});
+      memoriesByHoliday(res.id, holiday.id)
+        .then((res) => {
+          setAllMemories(res);
+        })
+        .catch(() => {});
     });
-
-    memoriesByHoliday(userId, holiday.id)
-      .then((res) => {
-        setAllMemories(res);
-        console.log(allMemories)
-      })
-      .catch(() => {});
-  }, [holiday]);
+  }, []);
 
   useEffect(() => {
     setNewMemoryTitle(memoryToBeEdit.title);
