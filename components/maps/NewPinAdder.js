@@ -1,13 +1,15 @@
 import { useRef, useState } from "react";
 import { useWindowDimensions, Image, View } from "react-native";
 import { FAB, Portal, Text, ActivityIndicator, MD2Colors } from "react-native-paper";
-import { addHoliday } from "../../utils/backendView";
+import { addHoliday, addMemory } from "../../utils/backendView";
 import AddHolidayForm from "./AddHolidayForm";
+import AddMemoryForm from "./AddMemoryForm";
 
-const NewPinAdder = ({ addPinMode, toggleAddPinMode, setHolidays, setMemories, mapViewRef, userId }) => {
+const NewPinAdder = ({ addPinMode, toggleAddPinMode, holidays, setHolidays, setMemories, mapViewRef, userId }) => {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const [menuOpen, setMenuOpen] = useState(false);
   const [addHolidayFormOpen, setAddHolidayFormOpen] = useState(false);
+  const [addMemoryFormOpen, setAddMemoryFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   // determines what is being edited - 'holiday', or 'memory'
@@ -36,7 +38,7 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, setHolidays, setMemories, m
       setAddHolidayFormOpen(true);
     } else if (editMode === "memory") {
       console.log("adding a new memory");
-      // TODO
+      setAddMemoryFormOpen(true);
     }
     toggleAddPinMode();
     setEditMode(null);
@@ -46,6 +48,14 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, setHolidays, setMemories, m
     const newHoliday = await addHoliday(userId, newTitle, newLocation.current);
 
     setHolidays((currHolidays) => [newHoliday, ...currHolidays]);
+    setIsLoading(false);
+  };
+
+  const onAddMemory = async (newTitle, selectedHoliday) => {
+    console.log("Adding new memory to holiday:", selectedHoliday);
+    const newMemory = await addMemory(userId, selectedHoliday, newTitle, newLocation.current);
+
+    setMemories((currMemories) => [newMemory, ...currMemories]);
     setIsLoading(false);
   };
 
@@ -127,6 +137,21 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, setHolidays, setMemories, m
             }}
             handleAddHoliday={onAddHoliday}
             setAdding={setIsLoading}
+          />
+        </Portal>
+      )}
+
+      {addMemoryFormOpen && (
+        <Portal>
+          <AddMemoryForm
+            newLocation={newLocation.current}
+            exitEditMode={() => {
+              selectEditMode(null);
+              setAddMemoryFormOpen(false);
+            }}
+            handleAddMemory={onAddMemory}
+            setAdding={setIsLoading}
+            holidays={holidays}
           />
         </Portal>
       )}

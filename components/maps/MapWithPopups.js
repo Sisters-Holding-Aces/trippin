@@ -154,6 +154,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable }) => {
         <NewPinAdder
           addPinMode={addPinMode}
           toggleAddPinMode={toggleAddPinMode}
+          holidays={holidays}
           setHolidays={setHolidays}
           setMemories={setMemories}
           mapViewRef={mapView.current}
