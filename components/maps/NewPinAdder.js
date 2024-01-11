@@ -142,18 +142,16 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, holidays, setHolidays, setM
       )}
 
       {addMemoryFormOpen && (
-        <Portal>
-          <AddMemoryForm
-            newLocation={newLocation.current}
-            exitEditMode={() => {
-              selectEditMode(null);
-              setAddMemoryFormOpen(false);
-            }}
-            handleAddMemory={onAddMemory}
-            setAdding={setIsLoading}
-            holidays={holidays}
-          />
-        </Portal>
+        <AddMemoryForm
+          newLocation={newLocation.current}
+          exitEditMode={() => {
+            selectEditMode(null);
+            setAddMemoryFormOpen(false);
+          }}
+          handleAddMemory={onAddMemory}
+          setAdding={setIsLoading}
+          holidays={holidays}
+        />
       )}
     </>
   );
