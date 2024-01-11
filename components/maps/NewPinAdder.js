@@ -122,7 +122,10 @@ const NewPinAdder = ({ addPinMode, toggleAddPinMode, holidays, setHolidays, setM
       {isLoading && (
         <Portal>
           <View style={customStyles.loadingScreen}>
-            <ActivityIndicator animating={true} color={MD2Colors.blueGrey100} size={"large"} />
+            <ActivityIndicator animating={true} color={MD2Colors.brown500} size={"large"} />
+            <Text variant="bodyLarge" style={{ color: "#000000", opacity: 1 }}>
+              Adding your new pin
+            </Text>
           </View>
         </Portal>
       )}
@@ -178,7 +181,7 @@ const customStyles = {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#6D7DF3",
-    opacity: 0.3,
+    backgroundColor: "#161C1B",
+    opacity: 0.4,
   },
 };

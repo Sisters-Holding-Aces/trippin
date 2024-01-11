@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Button, Dialog, TextInput, RadioButton, Portal } from "react-native-paper";
 
 const AddMemoryForm = ({ newLocation, exitEditMode, handleAddMemory, setAdding, holidays }) => {
@@ -26,24 +26,23 @@ const AddMemoryForm = ({ newLocation, exitEditMode, handleAddMemory, setAdding, 
         dismissable={false}
       >
         <Dialog.Title>Choose a holiday</Dialog.Title>
-        <Dialog.Content style={styles.form}>
-          <RadioButton.Group
-            onValueChange={(newValue) => {
-              const [holidayId, holidayTitle] = newValue.split(":");
-              setSelectedHoliday(holidayId);
-              setSelectedHolidayTitle(holidayTitle);
-            }}
-            value={selectedHoliday + ":" + selectedHolidayTitle}
-          >
-            {holidays.map((holiday) => {
-              return (
-                <View key={holiday.id}>
-                  <Text>{holiday.title}</Text>
-                  <RadioButton value={holiday.id + ":" + holiday.title} />
-                </View>
-              );
-            })}
-          </RadioButton.Group>
+        <Dialog.Content>
+          <ScrollView>
+            <RadioButton.Group
+              onValueChange={(newValue) => {
+                const [holidayId, holidayTitle] = newValue.split(":");
+                setSelectedHoliday(holidayId);
+                setSelectedHolidayTitle(holidayTitle);
+              }}
+              value={selectedHoliday + ":" + selectedHolidayTitle}
+            >
+              {holidays.map((holiday) => {
+                return (
+                  <RadioButton.Item key={holiday.id} label={holiday.title} value={holiday.id + ":" + holiday.title} />
+                );
+              })}
+            </RadioButton.Group>
+          </ScrollView>
         </Dialog.Content>
         <Dialog.Actions>
           <Button
@@ -81,6 +80,7 @@ const AddMemoryForm = ({ newLocation, exitEditMode, handleAddMemory, setAdding, 
             placeholder="A new trip title"
           />
           <Button
+            mode="contained-tonal"
             onPress={() => {
               setVisible(false);
               setShowHolidayOptions(true);
