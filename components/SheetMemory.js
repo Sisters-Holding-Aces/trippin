@@ -18,8 +18,6 @@ export default function SheetMemory({ memory, setCoordinates}){
         <Card.Actions style={{paddingRight: 20}}>
           <View style={{flex: 1, flexDirection: "row", justifyContent: "center"}}>
             <Button mode="text" onPressIn={()=>handleGoTo()} >Go to</Button>
-            <Button mode="text">Edit</Button>
-            <Button mode="text">Delete</Button>
           </View>
         </Card.Actions>
       </Card>

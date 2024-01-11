@@ -167,7 +167,7 @@ const MapWithPopups = ({ holidays, memories, user}) => {
       </Mapbox.MapView>
       {moreInfo && bottomSheet}
     </View>
-    {modalOpen && (<BottomModal user={user} setModalOpen={setModalOpen} />)}
+    {modalOpen && (<BottomModal sheetData={sheetData} user={user} setModalOpen={setModalOpen} modalOpen={modalOpen} />)}
     </>
   );
 };
