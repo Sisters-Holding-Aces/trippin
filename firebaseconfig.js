@@ -2,16 +2,23 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-// import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID } from "@env";
+import {
+  DEV_FIREBASE_API_KEY,
+  DEV_FIREBASE_AUTH_DOMAIN,
+  DEV_FIREBASE_PROJECT_ID,
+  DEV_FIREBASE_STORAGE_BUCKET,
+  DEV_FIREBASE_MESSAGING_SENDER_ID,
+  DEV_FIREBASE_APP_ID,
+} from "@env";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY || "AIzaSyAJZTM05LRzQOYCCQWZPs9QD3YaoAaRId4",
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN || "trippin-ed778.firebaseapp.com",
-  projectId: process.env.FIREBASE_PROJECT_ID || "trippin-ed778",
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "trippin-ed778.appspot.com",
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "997067009957",
-  appId: process.env.FIREBASE_APP_ID || "1:997067009957:web:bc6c66599726ed40ca024c",
+  apiKey: process.env.FIREBASE_API_KEY || DEV_FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN || DEV_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID || DEV_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || DEV_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || DEV_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID || DEV_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
