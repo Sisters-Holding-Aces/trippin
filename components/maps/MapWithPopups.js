@@ -10,11 +10,9 @@ import { holidaysGeoJsonFromData, memoriesGeoJsonFromData } from "../../utils/ma
 import ActionSheet from "../BottomSheet";
 import BottomModal from "../Bottom-Sheet/BottomModal";
 import NewPinAdder from "./NewPinAdder";
+import { DEV_MAPBOX_PUBLIC_API_KEY } from "@env";
 
-Mapbox.setAccessToken(
-  process.env.MAPBOX_PUBLIC_API_KEY ||
-    "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
-);
+Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY || DEV_MAPBOX_PUBLIC_API_KEY);
 
 const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) => {
   const [holidays, setHolidays] = useState(mapHolidays);
@@ -47,7 +45,7 @@ const MapWithPopups = ({ mapHolidays, mapMemories, userId, isEditable, user }) =
     const feature = e.features[0];
     const { popupType, id } = feature.properties;
     setSheetData(feature);
-    console.log(feature.properties, "here")
+    console.log(feature.properties, "here");
 
     // centers the selected pin on the screen
     setCoordinates(feature.geometry.coordinates);

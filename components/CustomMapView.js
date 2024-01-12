@@ -1,13 +1,21 @@
+/*
+
+  This component is not being used anymore, but serves as an example
+  of how to write a PointAnnotation as it is difficult to find 
+  examples online for the syntax. 
+  
+  Can be deleted if needed. 
+  
+*/
+
 import { StyleSheet, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import Mapbox from "@rnmapbox/maps";
 import { Avatar, Button, Card, Text } from "react-native-paper";
+import { DEV_MAPBOX_PUBLIC_API_KEY } from "@env";
 
-Mapbox.setAccessToken(
-  process.env.MAPBOX_PUBLIC_API_KEY ||
-    "pk.eyJ1IjoiYWs1Y2VsIiwiYSI6ImNscHF6MzN2OTA1YTkybG84Mmg5N2YydmgifQ.RAh-0bozPVgFnKfqWvAk2g"
-);
+Mapbox.setAccessToken(process.env.MAPBOX_PUBLIC_API_KEY || DEV_MAPBOX_PUBLIC_API_KEY);
 
 const CustomMapView = ({ holidays }) => {
   const [calloutVisible, setCalloutVisible] = useState(false);
